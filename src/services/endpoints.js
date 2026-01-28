@@ -2,6 +2,12 @@ export const ENDPOINTS = {
   // ---------- Auth ----------
   ME: "/api/me",
 
+  // Login
+  LOGIN: "/auth/login",
+
+  // Sign Up
+  SIGNUP: "/auth/register",
+
   // ---------- Wallet ----------
   BALANCES: "/api/balances",
 
@@ -14,6 +20,8 @@ export const ENDPOINTS = {
 
   // ---------- Transactions ----------
   TRANSACTIONS: "/api/transactions",
+
+
   
   TRANSACTION_BY_ID: (id) => `/api/transactions/${id}`,
 };
