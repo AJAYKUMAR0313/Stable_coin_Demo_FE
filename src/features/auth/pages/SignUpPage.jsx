@@ -10,6 +10,7 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
@@ -89,7 +90,7 @@ export default function SignUpPage() {
           </div>
 
           {/* Password */}
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <label className="block text-sm text-gray-600 mb-1">Password</label>
             <input
               type="password"
@@ -99,6 +100,28 @@ export default function SignUpPage() {
               minLength={6}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             />
+          </div> */}
+
+          <div className="mb-6 relative">
+            <label className="block text-sm text-gray-600 mb-1">Password</label>
+
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={8}
+              className="w-full px-4 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500"
+            />
+
+            {/* Eye Icon */}
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+            >
+              {showPassword ? "🙈" : "👁️"}
+            </button>
           </div>
 
           {/* Button */}
