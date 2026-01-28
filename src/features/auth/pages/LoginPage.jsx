@@ -34,6 +34,7 @@ export default function LoginPage() {
 
         localStorage.setItem("wallet_address", data.wallet_address);
         localStorage.setItem("username", data.username);
+        localStorage.setItem("userID", data.userid);
 
         console.log("Login success:", data);
 

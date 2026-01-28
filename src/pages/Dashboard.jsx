@@ -12,9 +12,11 @@ export default function Dashboard() {
     wei: 0,
   });
 
+  const [userEmail, setUserEmail] = useState("");
+
   const user = {
     name: localStorage.getItem("username"),
-    email: "user@example.com",
+    email: userEmail,
     wallet_address: localStorage.getItem("wallet_address"),
   };
 
@@ -34,8 +36,22 @@ export default function Dashboard() {
     }
   };
 
+  const userDetails = async () => {
+    try{
+      const response = await axios.get(
+        `http://localhost:8000/auth/${localStorage.getItem("userID")}`,
+      );
+      // console.log("User details:", response.data);
+      setUserEmail(response.data.email);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+    }
+  }
+
+
   useEffect(() => {
     getBalance();
+    userDetails();
   }, []);
 
   const navigate = useNavigate();
@@ -44,6 +60,7 @@ export default function Dashboard() {
     navigate("/");
     localStorage.removeItem("username");
     localStorage.removeItem("wallet_address");
+    localStorage.removeItem("userID");
   };
 
   const transactions = [
