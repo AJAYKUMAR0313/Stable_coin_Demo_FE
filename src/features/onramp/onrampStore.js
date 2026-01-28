@@ -5,7 +5,7 @@ export const useOnRampStore = create((set, get) => ({
   stablecoins: [],
   selectedToken: null,
   tokenAmount: "",
-  conversionStatus: "IDLE",
+  conversionStatus: "IDLE", // IDLE, PENDING, CONFIRMED
   transactionHash: null,
 
   loadStablecoins: async () => {
@@ -14,6 +14,7 @@ export const useOnRampStore = create((set, get) => ({
   },
 
   selectToken: (token) => set({ selectedToken: token }),
+  
   setTokenAmount: (amount) => set({ tokenAmount: amount }),
 
   startConversion: async () => {
@@ -21,15 +22,32 @@ export const useOnRampStore = create((set, get) => ({
 
     set({ conversionStatus: "PENDING" });
 
-    const res = await buyStablecoins({
-      tokenSymbol: selectedToken.symbol,
-      tokenAmount: Number(tokenAmount),
-      address: localStorage.getItem("address"),
-    });
+    try {
+      const res = await buyStablecoins({
+        tokenSymbol: selectedToken.symbol,
+        tokenAmount: Number(tokenAmount),
+        address: localStorage.getItem("address") || "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+      });
 
+      set({
+        transactionHash: res.txHash,
+        conversionStatus: "CONFIRMED",
+      });
+    } catch (error) {
+      console.error("Transaction failed:", error);
+      set({
+        conversionStatus: "IDLE",
+        transactionHash: null,
+      });
+    }
+  },
+
+  resetTransaction: () => {
     set({
-      transactionHash: res.txHash,
-      conversionStatus: "CONFIRMED",
+      selectedToken: null,
+      tokenAmount: "",
+      conversionStatus: "IDLE",
+      transactionHash: null,
     });
   },
 }));
