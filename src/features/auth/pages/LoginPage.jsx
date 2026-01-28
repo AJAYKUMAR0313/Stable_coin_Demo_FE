@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { ENDPOINTS } from "../../../services/endpoints";
-// import  { useNavigate } from "react-router-dom";
+import  { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -10,7 +10,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -31,10 +31,11 @@ export default function LoginPage() {
         setSuccess("Login successful!");
 
         localStorage.setItem("wallet_address", data.wallet_address);
+        localStorage.setItem("username", data.username);
 
         console.log("Login success:", data);
 
-        // navigate("/dashboard");
+        navigate("/dashboard");
       } else {
         // ❌ Backend-auth failure
         setError(data.message || "Invalid credentials");
