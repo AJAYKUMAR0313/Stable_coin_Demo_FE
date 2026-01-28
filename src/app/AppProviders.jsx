@@ -1,1 +1,0 @@
-// # Global providers (auth, theme, query)

@@ -1,23 +1,49 @@
-import React from "react";
-import { useState } from "react";
+import React, { use } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
   // mock data (replace with backend later)
+
+  const [balance, setBalance] = useState({
+    eth: 0,
+    usdc: 0,
+    wei: 0,
+  });
+
   const user = {
     name: localStorage.getItem("username"),
     email: "user@example.com",
+    wallet_address: localStorage.getItem("wallet_address"),
   };
 
-  const balance = 1250.75;
+  const getBalance = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/wallet/balance/${user.wallet_address}`,
+      );
+
+      setBalance({
+        eth: response.data.balance_eth,
+        usdc: response.data.balance_usdc,
+        wei: response.data.balance_wei,
+      });
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+    }
+  };
+
+  useEffect(() => {
+    getBalance();
+  }, []);
 
   const navigate = useNavigate();
 
   const logout = () => {
+    navigate("/");
     localStorage.removeItem("username");
     localStorage.removeItem("wallet_address");
-    navigate("/login");
   };
 
   const transactions = [
@@ -52,10 +78,25 @@ export default function Dashboard() {
 
       {/* Balance Card */}
       <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-6 mb-6">
-        <p className="text-sm opacity-90">Current Balance</p>
-        <h2 className="text-3xl font-bold mt-2">
-          ₹ {balance.toLocaleString()}
-        </h2>
+        {/* <p className="text-sm opacity-90">Current Balance (ETH)</p>
+        <h2 className="text-3xl font-bold mt-2">{balance.eth} ETH</h2> */}
+
+        <div className="grid grid-cols-3 gap-4 mt-4">
+          <div className="bg-white/20 rounded-lg p-3">
+            <p className="text-xs opacity-80">ETH</p>
+            <p className="font-semibold">{balance.eth}</p>
+          </div>
+
+          <div className="bg-white/20 rounded-lg p-3">
+            <p className="text-xs opacity-80">USDC</p>
+            <p className="font-semibold">${balance.usdc}</p>
+          </div>
+
+          <div className="bg-white/20 rounded-lg p-3">
+            <p className="text-xs opacity-80">Wei</p>
+            <p className="font-semibold truncate">{balance.wei}</p>
+          </div>
+        </div>
 
         {/* Quick Actions */}
         <div className="flex gap-4 mt-6">
@@ -71,7 +112,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Recent Transactions */}   
+      {/* Recent Transactions */}
       <div className="bg-white rounded-xl shadow-sm p-6">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">
           Recent Transactions
