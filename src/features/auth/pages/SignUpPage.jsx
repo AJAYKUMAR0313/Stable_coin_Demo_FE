@@ -28,7 +28,7 @@ export default function SignUpPage() {
       setSuccess("Account created successfully! You can now log in.");
       // navigate after success
       setTimeout(() => {
-        navigate("/login");
+        navigate("/");
       }, 1200);
       // clear form
       setName("");
@@ -113,7 +113,7 @@ export default function SignUpPage() {
 
         <p className="text-center text-sm text-gray-600 mt-4">
           Already have an account?
-          <a href="/login" className="text-blue-500 ml-1">
+          <a href="/" className="text-blue-500 ml-1">
             Login
           </a>
         </p>
