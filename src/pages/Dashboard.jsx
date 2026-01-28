@@ -117,7 +117,7 @@ export default function Dashboard() {
 
         {/* Quick Actions */}
         <div className="flex gap-4 mt-6">
-          <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+          <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100" onClick={() => navigate("/buy")}>
             Get Tokens
           </button>
           <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
