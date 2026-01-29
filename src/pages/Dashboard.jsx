@@ -1,10 +1,9 @@
-import React, { use } from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
-  // mock data (replace with backend later)
+  const navigate = useNavigate();
 
   const [balance, setBalance] = useState({
     eth: 0,
@@ -12,16 +11,12 @@ export default function Dashboard() {
     wei: 0,
   });
 
-  const user = {
-    name: localStorage.getItem("username"),
-    email: "user@example.com",
-    wallet_address: localStorage.getItem("wallet_address"),
-  };
-
   const getBalance = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/wallet/balance/${user.wallet_address}`,
+        `http://localhost:8000/wallet/balance/${localStorage.getItem(
+          "wallet_address"
+        )}`
       );
 
       setBalance({
@@ -38,14 +33,6 @@ export default function Dashboard() {
     getBalance();
   }, []);
 
-  const navigate = useNavigate();
-
-  const logout = () => {
-    navigate("/");
-    localStorage.removeItem("username");
-    localStorage.removeItem("wallet_address");
-  };
-
   const transactions = [
     { id: 1, type: "Credit", amount: "+200", date: "2026-01-20" },
     { id: 2, type: "Debit", amount: "-50", date: "2026-01-19" },
@@ -55,33 +42,10 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-          <p className="text-sm text-gray-500">Welcome back, {user.name}</p>
-        </div>
-
-        {/* Profile */}
-        <div className="flex items-center gap-4">
-          <div className="bg-white px-4 py-2 rounded-lg shadow-sm">
-            <p className="text-sm font-medium text-gray-700">{user.email}</p>
-          </div>
-          <div className="bg-blue-500 px-4 py-2 rounded-lg shadow-sm">
-            <p className="text-sm font-medium text-white">
-              <button onClick={() => logout()}>logout</button>
-            </p>
-          </div>
-        </div>
-      </div>
-
+    <div className="space-y-6">
       {/* Balance Card */}
-      <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-6 mb-6">
-        {/* <p className="text-sm opacity-90">Current Balance (ETH)</p>
-        <h2 className="text-3xl font-bold mt-2">{balance.eth} ETH</h2> */}
-
-        <div className="grid grid-cols-3 gap-4 mt-4">
+      <div className="sticky top-23 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-6">
+        <div className="grid grid-cols-3 gap-4">
           <div className="bg-white/20 rounded-lg p-3">
             <p className="text-xs opacity-80">ETH</p>
             <p className="font-semibold">{balance.eth}</p>
@@ -94,18 +58,25 @@ export default function Dashboard() {
 
           <div className="bg-white/20 rounded-lg p-3">
             <p className="text-xs opacity-80">Wei</p>
-            <p className="font-semibold truncate">{balance.wei}</p>
+            <p className="font-semibold truncate">
+              {balance.wei.toLocaleString()}
+            </p>
           </div>
         </div>
 
         {/* Quick Actions */}
         <div className="flex gap-4 mt-6">
-          <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+          <button
+            onClick={() => navigate("/buy")}
+            className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100"
+          >
             Get Tokens
           </button>
+
           <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
             Transfer
           </button>
+
           <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
             History
           </button>
@@ -135,7 +106,9 @@ export default function Dashboard() {
                   <td className="py-3">{tx.date}</td>
                   <td
                     className={`py-3 font-medium ${
-                      tx.type === "Credit" ? "text-green-600" : "text-red-600"
+                      tx.type === "Credit"
+                        ? "text-green-600"
+                        : "text-red-600"
                     }`}
                   >
                     {tx.type}
