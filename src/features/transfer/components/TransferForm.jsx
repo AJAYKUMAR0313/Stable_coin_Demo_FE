@@ -34,7 +34,7 @@ export default function TransferForm({ onContinue }) {
 
   return (
     <Card>
-      <Text.Title style={{ marginBottom: "32px", fontSize: "24px" }}>
+      <Text.Title style={{ marginTop: "0", marginBottom: "22px", fontSize: "24px" }}>
         Transfer Details
       </Text.Title>
 

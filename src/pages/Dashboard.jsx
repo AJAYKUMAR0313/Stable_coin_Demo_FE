@@ -44,7 +44,7 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       {/* Balance Card */}
-      <div className="sticky top-23 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-6">
+      <div className="sticky top-0.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-6">
         <div className="grid grid-cols-3 gap-4">
           <div className="bg-white/20 rounded-lg p-3">
             <p className="text-xs opacity-80">ETH</p>
@@ -67,17 +67,22 @@ export default function Dashboard() {
         {/* Quick Actions */}
         <div className="flex gap-4 mt-6">
           <button
-            onClick={() => navigate("/buy")}
+            onClick={() => navigate("/dashboard/buy")}
             className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100"
           >
             Get Tokens
           </button>
 
-          <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+          <button
+            onClick={() => navigate("/dashboard/transfer")}
+            className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100"
+          >
             Transfer
           </button>
 
-          <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+          <button 
+            onClick={() => navigate("/dashboard/transactions")}
+            className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
             History
           </button>
         </div>
