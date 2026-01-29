@@ -24,4 +24,10 @@ export const ENDPOINTS = {
 
   
   TRANSACTION_BY_ID: (id) => `/api/transactions/${id}`,
-};
+
+  // Transfer endpoints
+  TRANSFER_TOKENS: "/wallet/transfer",
+  GET_WALLET_TOKENS: (address)=> `/wallet/balance/${address}`,
+  VERIFY_ADDRESS: (address) =>`/api/wallet/verify-address/${address}`,
+  
+}
