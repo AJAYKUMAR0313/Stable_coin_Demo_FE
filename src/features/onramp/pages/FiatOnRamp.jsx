@@ -112,7 +112,7 @@ export default function FiatOnRamp() {
   }
 
   return (
-    <div style={{ maxWidth: "420px", margin: "60px auto" }}>
+    <div style={{ maxWidth: "620px", margin: "10px auto" }}>
       <Card>
         <Text.Title style={{ marginBottom: "24px" }}>
           Buy Stablecoins

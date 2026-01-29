@@ -14,8 +14,8 @@ export default function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
+          <Route path="/dashboard/buy" element={<FiatOnRamp />} />
         </Route>
-          <Route path="/buy" element={<FiatOnRamp />} />
       </Routes>
     </BrowserRouter>
   );
