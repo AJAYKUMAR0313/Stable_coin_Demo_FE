@@ -4,7 +4,7 @@ import Button from "@/components/ui/Button";
 import { Text } from "@/components/ui/Text";
 
 export default function TransferSummary({ onBack, onConfirm }) {
-  const { recipient, amount, selectedToken, note } = useTransferStore();
+  const { recipient, amount, selectedToken, note,transferStatus } = useTransferStore();
 
   const shortAddress = `${recipient.slice(0, 6)}...${recipient.slice(-4)}`;
   const remainingBalance = (selectedToken.balance - Number(amount)).toFixed(6);
@@ -178,6 +178,23 @@ export default function TransferSummary({ onBack, onConfirm }) {
           ⚠️ Please verify the recipient address carefully. Transfers cannot be reversed.
         </Text.Body>
       </div>
+      {/* Full Address Display */}
+      <div style={{
+        marginTop: "16px",
+        padding: "12px",
+        background: "#f8f9fa",
+        borderRadius: "8px"
+      }}>
+        <Text.Muted style={{ fontSize: "11px", marginBottom: "4px" }}>
+          Full Recipient Address:
+        </Text.Muted>
+        <code style={{
+          fontSize: "20px",
+          fontFamily: "monospace",
+          wordBreak: "break-all",
+          color: "#666"
+        }}>
+          {recipient}
 
       {/* Action Buttons */}
       <div style={{ display: "flex", gap: "12px" }}>
@@ -191,28 +208,10 @@ export default function TransferSummary({ onBack, onConfirm }) {
         >
           ← Back
         </Button>
-        <Button onClick={onConfirm}>
-          Confirm Transfer
+        <Button onClick={onConfirm} disabled={transferStatus === "PROCESSING"}>
+        {transferStatus === "PROCESSING" ? "Sending..." : "Confirm Transfer"}
         </Button>
       </div>
-
-      {/* Full Address Display */}
-      <div style={{
-        marginTop: "16px",
-        padding: "12px",
-        background: "#f8f9fa",
-        borderRadius: "8px"
-      }}>
-        <Text.Muted style={{ fontSize: "11px", marginBottom: "4px" }}>
-          Full Recipient Address:
-        </Text.Muted>
-        <code style={{
-          fontSize: "11px",
-          fontFamily: "monospace",
-          wordBreak: "break-all",
-          color: "#666"
-        }}>
-          {recipient}
         </code>
       </div>
     </Card>

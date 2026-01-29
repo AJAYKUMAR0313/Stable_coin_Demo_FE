@@ -9,18 +9,18 @@ export default function TransferResult({ onNewTransfer, onGoToDashboard }) {
     transferStatus, 
     transferResult, 
     errorMessage,
-    executeTransfer,
+    // executeTransfer,
     recipient,
     amount,
     selectedToken
   } = useTransferStore();
 
-  useEffect(() => {
-    // Execute transfer when component mounts
-    if (transferStatus === "IDLE") {
-      executeTransfer();
-    }
-  }, []);
+//   useEffect(() => {
+//     // Execute transfer when component mounts
+//     if (transferStatus === "IDLE") {
+//       executeTransfer();
+//     }
+//   }, []);
 
   const shortAddress = recipient ? `${recipient.slice(0, 6)}...${recipient.slice(-4)}` : "";
 
