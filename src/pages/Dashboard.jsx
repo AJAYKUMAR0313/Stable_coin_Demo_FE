@@ -73,7 +73,10 @@ export default function Dashboard() {
             Get Tokens
           </button>
 
-          <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+          <button
+            onClick={() => navigate("/dashboard/transfer")}
+            className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100"
+          >
             Transfer
           </button>
 

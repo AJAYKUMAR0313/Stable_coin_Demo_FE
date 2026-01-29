@@ -14,10 +14,10 @@ export default function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/buy" element={<FiatOnRamp />} />
-        <Route path="/transfer" element={<TransferPage />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="/dashboard/buy" element={<FiatOnRamp />} />
+          <Route path="/dashboard/transfer" element={<TransferPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
