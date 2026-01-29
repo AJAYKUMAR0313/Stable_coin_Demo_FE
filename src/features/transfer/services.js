@@ -1,5 +1,47 @@
 import apiClient from "@/services/apiClient";
 import { ENDPOINTS } from "@/services/endpoints";
+import { use } from "react";
+
+/**
+ * Fetch available tokens from user's wallet
+ * @returns {Promise<Array>} Array of token objects with balance
+ */
+// export async function fetchAvailableTokens() {
+//   try {
+//     // Get user address from localStorage
+//     const userAddress = localStorage.getItem("address") || "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb";
+    
+//     const response = await apiClient.get(ENDPOINTS.GET_WALLET_TOKENS, {
+//       params: { address: userAddress }
+//     });
+    
+//     return response.data.tokens || [];
+//   } catch (error) {
+//     console.error("Error fetching available tokens:", error);
+    
+//     // Fallback to demo data if API fails
+//     return [
+//       {
+//         symbol: "USDC",
+//         name: "USD Coin",
+//         balance: 1000.50,
+//         decimals: 6,
+//       },
+//       {
+//         symbol: "USDT",
+//         name: "Tether USD",
+//         balance: 500.25,
+//         decimals: 6,
+//       },
+//       {
+//         symbol: "DAI",
+//         name: "Dai Stablecoin",
+//         balance: 250.75,
+//         decimals: 18,
+//       },
+//     ];
+//   }
+// }
 
 /**
  * Fetch available tokens from user's wallet
@@ -8,13 +50,46 @@ import { ENDPOINTS } from "@/services/endpoints";
 export async function fetchAvailableTokens() {
   try {
     // Get user address from localStorage
-    const userAddress = localStorage.getItem("address") || "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb";
+    const userAddress = localStorage.getItem("wallet_address");
     
-    const response = await apiClient.get(ENDPOINTS.GET_WALLET_TOKENS, {
-      params: { address: userAddress }
-    });
+    // Call the balance endpoint
+    const response = await apiClient.get(ENDPOINTS.GET_WALLET_TOKENS(userAddress));
     
-    return response.data.tokens || [];
+    const balanceData = response.data;
+    
+    // Transform the balance response into token array
+    const tokens = [];
+    
+    // Add ETH if balance > 0
+    if (balanceData.balance_eth > 0) {
+      tokens.push({
+        symbol: "ETH",
+        name: "Ethereum",
+        balance: balanceData.balance_eth,
+        decimals: 18,
+      });
+    }
+    
+    // Add USDC if balance > 0
+    if (balanceData.balance_usdc > 0) {
+      tokens.push({
+        symbol: "USDC",
+        name: "USD Coin",
+        balance: balanceData.balance_usdc,
+        decimals: 6,
+      });
+    }
+    
+    // Return tokens (only those with balance > 0)
+    return tokens.length > 0 ? tokens : [
+      // If no tokens, return demo data
+      {
+        symbol: "USDC",
+        name: "USD Coin",
+        balance: 0,
+        decimals: 6,
+      },
+    ];
   } catch (error) {
     console.error("Error fetching available tokens:", error);
     
@@ -27,15 +102,9 @@ export async function fetchAvailableTokens() {
         decimals: 6,
       },
       {
-        symbol: "USDT",
-        name: "Tether USD",
-        balance: 500.25,
-        decimals: 6,
-      },
-      {
-        symbol: "DAI",
-        name: "Dai Stablecoin",
-        balance: 250.75,
+        symbol: "ETH",
+        name: "Ethereum",
+        balance: 0.5,
         decimals: 18,
       },
     ];
@@ -55,9 +124,9 @@ export async function fetchAvailableTokens() {
 export async function executeTransferRequest({ from, to, tokenSymbol, amount, note }) {
   try {
     const response = await apiClient.post(ENDPOINTS.TRANSFER_TOKENS, {
-      fromAddress: from,
-      toAddress: to,
-      token: tokenSymbol,
+      from_address: from,
+      to_address: to,
+      asset: tokenSymbol,
       amount: amount,
       note: note,
     });

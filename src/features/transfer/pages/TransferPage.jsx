@@ -6,9 +6,10 @@ import TransferForm from "../components/TransferForm";
 import TransferSummary from "../components/TransferSummary";
 import TransferResult from "../components/TransferResult";
 
+
 export default function TransferPage() {
   const [step, setStep] = useState("input"); // 'input' | 'confirm' | 'result'
-  const {  resetTransfer } = useTransferStore();
+  const {  executeTransfer,resetTransfer } = useTransferStore();
 
   const handleContinue = () => {
     setStep("confirm");
@@ -19,6 +20,7 @@ export default function TransferPage() {
   };
 
   const handleConfirm = async () => {
+    await executeTransfer();
     setStep("result");
     // Transfer execution happens in TransferResult component
   };

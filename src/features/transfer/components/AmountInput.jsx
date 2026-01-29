@@ -111,7 +111,7 @@ export default function AmountInput({ error, setError }) {
         )}
       </div>
 
-      {/* Quick Amount Buttons */}
+      {/* Quick Amount Buttons
       {selectedToken && (
         <div style={{
           display: "flex",
@@ -146,7 +146,7 @@ export default function AmountInput({ error, setError }) {
             </button>
           ))}
         </div>
-      )}
+      )} */}
 
       {/* Balance Info */}
       {selectedToken && (

@@ -52,7 +52,7 @@ export const useTransferStore = create((set, get) => ({
         to: recipient,
         tokenSymbol: selectedToken.symbol,
         amount: Number(amount),
-        note: note || undefined,
+        note: note || "",
       });
 
       // Update the selected token balance with new balance from backend
