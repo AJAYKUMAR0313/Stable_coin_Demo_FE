@@ -80,7 +80,9 @@ export default function Dashboard() {
             Transfer
           </button>
 
-          <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+          <button 
+            onClick={() => navigate("/dashboard/transactions")}
+            className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
             History
           </button>
         </div>
