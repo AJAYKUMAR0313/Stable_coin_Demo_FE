@@ -82,8 +82,8 @@ export default function RecipientInput({ value, onChange, error, setError }) {
   const isValid = !error && value && touched && !isChecking;
 
   return (
-    <div style={{ marginBottom: "32px" }}>
-      <Text.Label style={{ marginBottom: "12px", display: "block" }}>
+    <div style={{ marginBottom: "20px" }}>
+      <Text.Label style={{ marginBottom: "8px", display: "block", fontSize: "15px" }}>
         Recipient Wallet Address
       </Text.Label>
 
@@ -96,7 +96,8 @@ export default function RecipientInput({ value, onChange, error, setError }) {
           placeholder="0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb"
           style={{
             width: "100%",
-            padding: "16px 50px 16px 16px",
+            padding: "10px 30px 10px 10px",
+            fontSize: "15px",
             fontFamily: "monospace",
             border: `2px solid ${
               error ? "#ef4444" : isValid ? "#22c55e" : "#e0e0e0"

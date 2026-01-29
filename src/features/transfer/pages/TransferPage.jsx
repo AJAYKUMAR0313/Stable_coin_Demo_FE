@@ -37,16 +37,16 @@ export default function TransferPage() {
   return (
     <div style={{ 
       maxWidth: "800px", 
-      margin: "60px auto", 
+      margin: "5px auto", 
       padding: "0 20px",
       width: "100%"
     }}>
       {/* Header */}
-      <div style={{ marginBottom: "32px", textAlign: "center" }}>
-        <Text.Title style={{ fontSize: "32px", marginBottom: "8px" }}>
+      <div style={{ marginBottom: "22px", textAlign: "center" }}>
+        <Text.Title style={{ fontSize: "22px", marginBottom: "8px" }}>
           Send Tokens
         </Text.Title>
-        <Text.Muted style={{ fontSize: "16px" }}>
+        <Text.Muted style={{ fontSize: "15px" }}>
           Transfer tokens to another wallet
         </Text.Muted>
       </div>
@@ -56,8 +56,8 @@ export default function TransferPage() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        gap: "16px",
-        marginBottom: "40px"
+        gap: "10px",
+        marginBottom: "30px"
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <div style={{
