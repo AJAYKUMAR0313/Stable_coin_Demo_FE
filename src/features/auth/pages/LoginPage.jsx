@@ -21,7 +21,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await axios.post(`http://localhost:8001/auth/login`, {
+      const response = await axios.post(`http://localhost:8000/auth/login`, {
         username: email,
         password,
       });
@@ -34,6 +34,7 @@ export default function LoginPage() {
 
         localStorage.setItem("wallet_address", data.wallet_address);
         localStorage.setItem("username", data.username);
+        localStorage.setItem("userID", data.userid);
 
         console.log("Login success:", data);
 

@@ -20,7 +20,7 @@ export default function SignUpPage() {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:8001/auth/register", {
+      const response = await axios.post("http://localhost:8000/auth/register", {
         name,
         email,
         password,

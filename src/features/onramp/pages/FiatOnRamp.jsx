@@ -27,9 +27,8 @@ export default function FiatOnRamp() {
     loadStablecoins();
   }, []);
 
-  const total = selectedToken && tokenAmount 
-    ? tokenAmount * selectedToken.rateInr 
-    : 0;
+  const total =
+    selectedToken && tokenAmount ? tokenAmount * selectedToken.rateInr : 0;
 
   const handleContinue = () => {
     setShowSummary(true);
@@ -57,11 +56,13 @@ export default function FiatOnRamp() {
       <div style={{ maxWidth: "420px", margin: "60px auto" }}>
         <Card>
           <div style={{ textAlign: "center", padding: "40px 0" }}>
-            <div style={{ 
-              fontSize: "64px", 
-              marginBottom: "16px",
-              animation: "scaleIn 0.5s ease-out"
-            }}>
+            <div
+              style={{
+                fontSize: "64px",
+                marginBottom: "16px",
+                animation: "scaleIn 0.5s ease-out",
+              }}
+            >
               ✓
             </div>
             <Text.Title style={{ marginBottom: "8px" }}>
@@ -70,13 +71,10 @@ export default function FiatOnRamp() {
             <Text.Muted style={{ marginBottom: "24px" }}>
               Your tokens have been credited
             </Text.Muted>
-            
+
             <TransactionStatus />
-            
-            <Button 
-              onClick={handleStartNew}
-              style={{ marginTop: "24px" }}
-            >
+
+            <Button onClick={handleStartNew} style={{ marginTop: "24px" }}>
               Start New Transaction
             </Button>
           </div>
@@ -91,21 +89,21 @@ export default function FiatOnRamp() {
       <div style={{ maxWidth: "420px", margin: "60px auto" }}>
         <Card>
           <div style={{ textAlign: "center", padding: "40px 0" }}>
-            <div style={{ 
-              width: "48px", 
-              height: "48px", 
-              border: "4px solid #f0f0f0",
-              borderTop: "4px solid #000",
-              borderRadius: "50%",
-              margin: "0 auto 24px",
-              animation: "spin 1s linear infinite"
-            }} />
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                border: "4px solid #f0f0f0",
+                borderTop: "4px solid #000",
+                borderRadius: "50%",
+                margin: "0 auto 24px",
+                animation: "spin 1s linear infinite",
+              }}
+            />
             <Text.Title style={{ marginBottom: "8px" }}>
               Processing Transaction
             </Text.Title>
-            <Text.Muted>
-              Please wait while we send your tokens...
-            </Text.Muted>
+            <Text.Muted>Please wait while we send your tokens...</Text.Muted>
             <TransactionStatus />
           </div>
         </Card>
@@ -139,6 +137,10 @@ export default function FiatOnRamp() {
         >
           Continue to Payment
         </Button>
+
+        <p className="mt-4 text-center text-blue-500" >
+          <a href="/dashboard">back to dashboard</a>
+        </p>
       </Card>
 
       <SummaryCard
