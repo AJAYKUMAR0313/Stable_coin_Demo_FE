@@ -26,7 +26,7 @@ export const useOnRampStore = create((set, get) => ({
       const res = await buyStablecoins({
         tokenSymbol: selectedToken.symbol,
         tokenAmount: Number(tokenAmount),
-        address: localStorage.getItem("wallet-address") || "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+        address: localStorage.getItem("wallet_address"),
       });
 
       set({

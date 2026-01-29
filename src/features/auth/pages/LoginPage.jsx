@@ -21,7 +21,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await axios.post(`http://localhost:8001/auth/login`, {
+      const response = await axios.post(`http://localhost:8000/auth/login`, {
         username: email,
         password,
       });

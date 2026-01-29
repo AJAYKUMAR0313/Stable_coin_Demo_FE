@@ -24,4 +24,13 @@ export const ENDPOINTS = {
 
   
   TRANSACTION_BY_ID: (id) => `/api/transactions/${id}`,
+
+  // Transfer endpoints
+  TRANSFER_TOKENS: "/api/transfer/send",
+  GET_WALLET_TOKENS: "/api/wallet/tokens",
+  VERIFY_ADDRESS: "/api/wallet/verify-address",
+  
+  // Transaction history (if needed)
+  GET_TRANSFER_HISTORY: "/api/transfer/history",
+  GET_TRANSFER_DETAILS: "/api/transfer/:id",
 };
