@@ -8,8 +8,7 @@ import TransferResult from "../components/TransferResult";
 
 export default function TransferPage() {
   const [step, setStep] = useState("input"); // 'input' | 'confirm' | 'result'
-//   const { transferStatus, resetTransfer } = useTransferStore();
-  const { resetTransfer } = useTransferStore();
+  const {  resetTransfer } = useTransferStore();
 
   const handleContinue = () => {
     setStep("confirm");
@@ -34,63 +33,95 @@ export default function TransferPage() {
   };
 
   return (
-    <div style={{ maxWidth: "480px", margin: "60px auto", padding: "0 20px" }}>
+    <div style={{ 
+      maxWidth: "800px", 
+      margin: "60px auto", 
+      padding: "0 20px",
+      width: "100%"
+    }}>
       {/* Header */}
-      <div style={{ marginBottom: "24px", textAlign: "center" }}>
-        <Text.Title style={{ fontSize: "28px", marginBottom: "8px" }}>
+      <div style={{ marginBottom: "32px", textAlign: "center" }}>
+        <Text.Title style={{ fontSize: "32px", marginBottom: "8px" }}>
           Send Tokens
         </Text.Title>
-        <Text.Muted>Transfer tokens to another wallet</Text.Muted>
+        <Text.Muted style={{ fontSize: "16px" }}>
+          Transfer tokens to another wallet
+        </Text.Muted>
       </div>
 
       {/* Step Indicator */}
       <div style={{
         display: "flex",
         justifyContent: "center",
-        gap: "12px",
-        marginBottom: "32px"
+        alignItems: "center",
+        gap: "16px",
+        marginBottom: "40px"
       }}>
-        <div style={{
-          width: "32px",
-          height: "32px",
-          borderRadius: "50%",
-          background: step === "input" ? "#000" : "#e0e0e0",
-          color: step === "input" ? "#fff" : "#666",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "14px",
-          fontWeight: 600
-        }}>
-          1
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "50%",
+            background: step === "input" ? "#000" : step === "confirm" || step === "result" ? "#22c55e" : "#e0e0e0",
+            color: "#fff",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "16px",
+            fontWeight: 600,
+            transition: "all 0.3s"
+          }}>
+            {step === "input" ? "1" : "✓"}
+          </div>
+          <span style={{ fontSize: "14px", color: "#666", display: window.innerWidth > 640 ? "inline" : "none" }}>
+            Details
+          </span>
         </div>
-        <div style={{
-          width: "32px",
-          height: "32px",
-          borderRadius: "50%",
-          background: step === "confirm" ? "#000" : "#e0e0e0",
-          color: step === "confirm" ? "#fff" : "#666",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "14px",
-          fontWeight: 600
-        }}>
-          2
+
+        <div style={{ width: "60px", height: "2px", background: step === "confirm" || step === "result" ? "#22c55e" : "#e0e0e0" }} />
+
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "50%",
+            background: step === "confirm" ? "#000" : step === "result" ? "#22c55e" : "#e0e0e0",
+            color: step === "confirm" || step === "result" ? "#fff" : "#666",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "16px",
+            fontWeight: 600,
+            transition: "all 0.3s"
+          }}>
+            {step === "result" ? "✓" : "2"}
+          </div>
+          <span style={{ fontSize: "14px", color: "#666", display: window.innerWidth > 640 ? "inline" : "none" }}>
+            Review
+          </span>
         </div>
-        <div style={{
-          width: "32px",
-          height: "32px",
-          borderRadius: "50%",
-          background: step === "result" ? "#000" : "#e0e0e0",
-          color: step === "result" ? "#fff" : "#666",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "14px",
-          fontWeight: 600
-        }}>
-          3
+
+        <div style={{ width: "60px", height: "2px", background: step === "result" ? "#22c55e" : "#e0e0e0" }} />
+
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "50%",
+            background: step === "result" ? "#000" : "#e0e0e0",
+            color: step === "result" ? "#fff" : "#666",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "16px",
+            fontWeight: 600,
+            transition: "all 0.3s"
+          }}>
+            3
+          </div>
+          <span style={{ fontSize: "14px", color: "#666", display: window.innerWidth > 640 ? "inline" : "none" }}>
+            Complete
+          </span>
         </div>
       </div>
 

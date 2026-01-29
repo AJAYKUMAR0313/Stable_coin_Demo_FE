@@ -72,8 +72,8 @@ export default function AmountInput({ error, setError }) {
     : null;
 
   return (
-    <div style={{ marginBottom: "24px" }}>
-      <Text.Label style={{ marginBottom: "8px", display: "block" }}>
+    <div style={{ marginBottom: "32px" }}>
+      <Text.Label style={{ marginBottom: "12px", display: "block", fontSize: "15px" }}>
         Amount
       </Text.Label>
 
@@ -86,9 +86,9 @@ export default function AmountInput({ error, setError }) {
           placeholder="0.00"
           disabled={!selectedToken}
           style={{
-            fontSize: "32px",
+            fontSize: "clamp(24px, 5vw, 36px)",
             fontWeight: 600,
-            padding: "12px 80px 12px 16px",
+            padding: "16px 100px 16px 16px",
             border: `2px solid ${error && touched ? "#ef4444" : isValid ? "#22c55e" : "#e0e0e0"}`,
             borderRadius: "12px",
             textAlign: "left",
@@ -101,7 +101,7 @@ export default function AmountInput({ error, setError }) {
             right: "16px",
             top: "50%",
             transform: "translateY(-50%)",
-            fontSize: "18px",
+            fontSize: "clamp(16px, 3vw, 20px)",
             color: "#666",
             fontWeight: 600,
             pointerEvents: "none"

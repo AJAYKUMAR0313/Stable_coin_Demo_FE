@@ -12,11 +12,11 @@ export default function BalanceDisplay() {
 
   return (
     <div style={{
-      padding: "16px",
+      padding: "20px",
       background: "#f8f9fa",
       borderRadius: "12px",
       border: "1px solid #e0e0e0",
-      marginBottom: "24px"
+      marginBottom: "32px"
     }}>
       <div style={{
         display: "flex",

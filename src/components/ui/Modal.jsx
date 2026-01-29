@@ -1,4 +1,4 @@
-//Modal.jsx
+// Modal.jsx
 export default function Modal({ open, children, onClose }) {
   if (!open) return null;
 
@@ -14,6 +14,7 @@ export default function Modal({ open, children, onClose }) {
         justifyContent: "center",
         zIndex: 1000,
         animation: "fadeIn 0.2s ease-out",
+        padding: "20px",
       }}
     >
       <div
@@ -21,9 +22,9 @@ export default function Modal({ open, children, onClose }) {
         style={{
           background: "#fff",
           borderRadius: "16px",
-          padding: "32px",
-          width: "90%",
-          maxWidth: "480px",
+          padding: "clamp(24px, 5vw, 40px)",
+          width: "100%",
+          maxWidth: "600px",
           maxHeight: "90vh",
           overflowY: "auto",
           animation: "slideUp 0.3s ease-out",

@@ -15,8 +15,8 @@ export default function TokenSelector() {
   }, []);
 
   return (
-    <div style={{ marginBottom: "24px" }}>
-      <Text.Label style={{ marginBottom: "8px", display: "block" }}>
+    <div style={{ marginBottom: "32px" }}>
+      <Text.Label style={{ marginBottom: "12px", display: "block", fontSize: "15px" }}>
         Select Token
       </Text.Label>
 
@@ -29,8 +29,8 @@ export default function TokenSelector() {
           }}
           style={{
             width: "100%",
-            padding: "14px 40px 14px 16px",
-            fontSize: "16px",
+            padding: "16px 40px 16px 16px",
+            fontSize: "15px",
             border: "2px solid #e0e0e0",
             borderRadius: "12px",
             outline: "none",

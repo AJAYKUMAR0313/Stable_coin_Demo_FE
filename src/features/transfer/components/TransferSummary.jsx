@@ -11,15 +11,15 @@ export default function TransferSummary({ onBack, onConfirm }) {
 
   return (
     <Card>
-      <Text.Title style={{ marginBottom: "24px", textAlign: "center" }}>
+      <Text.Title style={{ marginBottom: "32px", textAlign: "center", fontSize: "24px" }}>
         Review Transfer
       </Text.Title>
 
       <div style={{
         background: "#f8f9fa",
         borderRadius: "12px",
-        padding: "20px",
-        marginBottom: "24px"
+        padding: "clamp(20px, 4vw, 28px)",
+        marginBottom: "32px"
       }}>
         {/* From/To Section */}
         <div style={{ marginBottom: "20px" }}>

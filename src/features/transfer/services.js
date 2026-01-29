@@ -65,8 +65,8 @@ export async function executeTransferRequest({ from, to, tokenSymbol, amount, no
     return {
       success: true,
       transactionId: response.data.transactionId || response.data.txHash,
-      newBalance: response.data.newBalance,
-      timestamp: response.data.timestamp || new Date().toISOString(),
+    //   newBalance: response.data.newBalance,
+    //   timestamp: response.data.timestamp || new Date().toISOString(),
     };
   } catch (error) {
     console.error("Transfer request failed:", error);
@@ -97,10 +97,7 @@ export function validateWalletAddress(address) {
  */
 export async function verifyRecipientAddress(address) {
   try {
-    const response = await apiClient.get(ENDPOINTS.VERIFY_ADDRESS, {
-      params: { address }
-    });
-    
+    const response = await apiClient.get(ENDPOINTS.VERIFY_ADDRES(address));
     return response.data.exists || false;
   } catch (error) {
     console.error("Address verification failed:", error);

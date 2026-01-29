@@ -1,3 +1,4 @@
+// Button.jsx
 export default function Button({ children, onClick, disabled, style = {} }) {
   return (
     <button
@@ -5,12 +6,12 @@ export default function Button({ children, onClick, disabled, style = {} }) {
       disabled={disabled}
       style={{
         width: "100%",
-        padding: "14px",
+        padding: "clamp(12px, 2vw, 16px)",
         borderRadius: "12px",
         border: "none",
         background: "#000",
         color: "#fff",
-        fontSize: "16px",
+        fontSize: "clamp(15px, 2vw, 17px)",
         fontWeight: 600,
         cursor: disabled ? "not-allowed" : "pointer",
         opacity: disabled ? 0.6 : 1,

@@ -34,7 +34,7 @@ export default function TransferForm({ onContinue }) {
 
   return (
     <Card>
-      <Text.Title style={{ marginBottom: "24px" }}>
+      <Text.Title style={{ marginBottom: "32px", fontSize: "24px" }}>
         Transfer Details
       </Text.Title>
 
@@ -59,8 +59,8 @@ export default function TransferForm({ onContinue }) {
       <BalanceDisplay />
 
       {/* Optional Note */}
-      <div style={{ marginBottom: "24px" }}>
-        <Text.Label style={{ marginBottom: "8px", display: "block" }}>
+      <div style={{ marginBottom: "32px" }}>
+        <Text.Label style={{ marginBottom: "12px", display: "block", fontSize: "15px" }}>
           Note (Optional)
         </Text.Label>
         <textarea
@@ -70,13 +70,13 @@ export default function TransferForm({ onContinue }) {
           maxLength={200}
           style={{
             width: "100%",
-            padding: "12px",
-            fontSize: "14px",
+            padding: "14px",
+            fontSize: "15px",
             border: "2px solid #e0e0e0",
             borderRadius: "12px",
             outline: "none",
             resize: "vertical",
-            minHeight: "80px",
+            minHeight: "100px",
             fontFamily: "inherit",
             transition: "border-color 0.2s"
           }}
