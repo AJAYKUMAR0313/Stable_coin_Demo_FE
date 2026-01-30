@@ -22,6 +22,12 @@ export async function fetchSupportedStablecoins() {
       decimals: 18,
       rateInr: 83.40, // Rate per token in INR
     },
+    {
+      symbol: "ETH",
+      name: "Ethereum",
+      decimals: 18,
+      rateInr: 83.35,
+    }
   ];
 }
 
