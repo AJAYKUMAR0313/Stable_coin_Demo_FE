@@ -73,7 +73,7 @@ export default function AmountInput({ error, setError }) {
     : null;
 
   return (
-    <div className="mb-8">
+    <div className="mb-4">
       <label className="block text-sm font-semibold text-gray-700 mb-3">
         Amount to Sell
       </label>
@@ -86,7 +86,7 @@ export default function AmountInput({ error, setError }) {
           onBlur={handleBlur}
           placeholder="0.00"
           disabled={!selectedToken}
-          className={`w-full px-4 py-3 text-2xl sm:text-4xl font-semibold border-2 rounded-xl focus:outline-none transition-colors ${
+          className={`w-full px-4 py-1.5 text-sm sm:text-xl font-normal border-2 rounded-xl focus:outline-none transition-colors ${
             error && touched 
               ? "border-red-500" 
               : isValid 

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import TransactionDetailsModal from "../features/transactions/TransactionDetailsModal.jsx";
+import { statusStyle, formatDate }  from "../features/transactions/commonFunctions.js";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -11,12 +13,16 @@ export default function Dashboard() {
     wei: 0,
   });
 
+  const [selectedTx, setSelectedTx] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [transactions, setTransactions] = useState([]);
+
   const getBalance = async () => {
     try {
       const response = await axios.get(
         `http://localhost:8000/wallet/balance/${localStorage.getItem(
-          "wallet_address"
-        )}`
+          "wallet_address",
+        )}`,
       );
 
       setBalance({
@@ -28,18 +34,45 @@ export default function Dashboard() {
       console.error("Error fetching balance:", error);
     }
   };
+  const fetchTransactions = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/transactions/transactions/${localStorage.getItem("wallet_address")}`,
+      );
+      setTransactions(response.data);
+    } catch (error) {
+      console.error("Error fetching transactions", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     getBalance();
+    fetchTransactions();
   }, []);
 
-  const transactions = [
-    { id: 1, type: "Credit", amount: "+200", date: "2026-01-20" },
-    { id: 2, type: "Debit", amount: "-50", date: "2026-01-19" },
-    { id: 3, type: "Credit", amount: "+500", date: "2026-01-18" },
-    { id: 4, type: "Debit", amount: "-120", date: "2026-01-17" },
-    { id: 5, type: "Credit", amount: "+300", date: "2026-01-16" },
-  ];
+
+  // const statusStyle = (status) => {
+  //   switch (status) {
+  //     case "SUCCESS":
+  //       return "bg-green-100 text-green-700";
+  //     case "PENDING":
+  //       return "bg-yellow-100 text-yellow-700";
+  //     case "FAILED":
+  //       return "bg-red-100 text-red-700";
+  //     default:
+  //       return "bg-gray-100 text-gray-700";
+  //   }
+  // };
+
+  // const transactions = [
+  //   { id: 1, type: "Credit", amount: "+200", date: "2026-01-20" },
+  //   { id: 2, type: "Debit", amount: "-50", date: "2026-01-19" },
+  //   { id: 3, type: "Credit", amount: "+500", date: "2026-01-18" },
+  //   { id: 4, type: "Debit", amount: "-120", date: "2026-01-17" },
+  //   { id: 5, type: "Credit", amount: "+300", date: "2026-01-16" },
+  // ];
 
   return (
     <div className="space-y-6">
@@ -80,10 +113,17 @@ export default function Dashboard() {
             Transfer
           </button>
 
-          <button 
+          <button
             onClick={() => navigate("/dashboard/transactions")}
-            className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100">
+            className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100"
+          >
             History
+          </button>
+          <button
+            onClick={() => navigate("/dashboard/offramp")}
+            className="bg-white text-blue-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100"
+          >
+            Get Fiat
           </button>
         </div>
       </div>
@@ -94,37 +134,79 @@ export default function Dashboard() {
           Recent Transactions
         </h3>
 
-        {transactions.length === 0 ? (
-          <p className="text-sm text-gray-500">No recent transactions</p>
+        {loading ? (
+          <p className="text-sm text-gray-500">Loading transactions...</p>
+        ) : transactions.length === 0 ? (
+          <p className="text-sm text-gray-500">No transactions found</p>
         ) : (
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-gray-500 border-b">
-                <th className="pb-2">Date</th>
-                <th className="pb-2">Type</th>
-                <th className="pb-2">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.map((tx) => (
-                <tr key={tx.id} className="border-b last:border-none">
-                  <td className="py-3">{tx.date}</td>
-                  <td
-                    className={`py-3 font-medium ${
-                      tx.type === "Credit"
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
-                  >
-                    {tx.type}
-                  </td>
-                  <td className="py-3">{tx.amount}</td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-gray-500 border-b">
+                  <th className="pb-3">Date</th>
+                  <th className="pb-3">Type</th>
+                  <th className="pb-3">Amount</th>
+                  <th className="pb-3">Asset</th>
+                  <th className="pb-3">Status</th>
+                  <th className="pb-3">Tx Hash</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody>
+                {transactions.map((tx) => (
+                  <tr
+                    key={tx.tx_hash}
+                    onClick={() => setSelectedTx(tx)}
+                    className="border-b last:border-none cursor-pointer hover:bg-gray-50"
+                  >
+                    <td className="py-3">{formatDate(tx.timestamp)}</td>
+
+                    <td
+                      className={`py-3 font-medium ${
+                        tx.transaction_type === "RECEIVED"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {tx.transaction_type}
+                    </td>
+
+                    <td className="py-3 font-semibold">
+                      {tx.amount}{" "}
+                      {tx.asset?.startsWith("Token:") ? "USDC" : tx.asset}
+                    </td>
+
+                    <td className="py-3">
+                      {tx.asset?.startsWith("Token:") ? "USDC" : tx.asset}
+                    </td>
+
+                    <td className="py-3">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${statusStyle(
+                          tx.status,
+                        )}`}
+                      >
+                        {tx.status}
+                      </span>
+                    </td>
+
+                    <td className="py-3 text-xs text-blue-600 truncate max-w-[140px]">
+                      {tx.tx_hash}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
+
+      {selectedTx && (
+        <TransactionDetailsModal
+          tx={selectedTx}
+          onClose={() => setSelectedTx(null)}
+        />
+      )}
     </div>
   );
 }

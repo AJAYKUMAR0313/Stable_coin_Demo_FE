@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import TransactionHistory from "./TransactionHistory";
+import { formatDate } from "./commonFunctions";
 
 export default function TransactionDetailsModal({ tx, onClose }) {
   if (!tx) return null;
@@ -20,10 +22,9 @@ export default function TransactionDetailsModal({ tx, onClose }) {
     };
   }, [onClose]);
 
-  const statusColor = {
-    SUCCESS: "bg-green-100 text-green-700",
-    PENDING: "bg-yellow-100 text-yellow-700",
-    FAILED: "bg-red-100 text-red-700",
+  const transactionTypeColor = {
+    RECEIVED: "text-green-600",
+    SENT: "text-red-600",
   };
 
   return (
@@ -55,7 +56,7 @@ export default function TransactionDetailsModal({ tx, onClose }) {
         <div className="mb-6">
           <span
             className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-              statusColor[tx.transaction_status] || "bg-gray-100 text-gray-700"
+              transactionTypeColor[tx.transaction_status] || "bg-gray-100 text-gray-700"
             }`}
           >
             {tx.transaction_status}
@@ -65,23 +66,23 @@ export default function TransactionDetailsModal({ tx, onClose }) {
         {/* Details */}
         <div className="space-y-4 text-sm">
           <Detail label="Transaction Hash" value={tx.tx_hash} copy />
-          <Detail label="Type" value={tx.type} />
+          <Detail
+            label="Type"
+            value={tx.transaction_type}
+            className={
+              transactionTypeColor[tx.transaction_type] || "text-gray-600"
+            }
+          />
+
           <Detail label="Asset" value={tx.asset} />
-          <Detail label="Amount (ETH)" value={tx.value_eth} />
+          <Detail label="Amount (ETH)" value={tx.amount} />
           <Detail
             label="Amount (Wei)"
-            value={tx.value_wei.toLocaleString()}
+            value={tx.asset?.startsWith("Token:") ? "USDC" : tx.asset}
           />
           <Detail label="From" value={tx.from_address} />
           <Detail label="To" value={tx.to_address} />
-          <Detail
-            label="Timestamp"
-            value={
-              tx.timestamp
-                ? new Date(tx.timestamp * 1000).toLocaleString()
-                : "-"
-            }
-          />
+          <Detail label="Timestamp" value={formatDate(tx.timestamp)} />
         </div>
 
         {/* Footer */}
@@ -107,20 +108,17 @@ export default function TransactionDetailsModal({ tx, onClose }) {
   );
 }
 
-function Detail({ label, value, copy }) {
-  const handleCopy = () => {
-    navigator.clipboard.writeText(value);
-  };
-
+function Detail({ label, value, className = "", copy }) {
   return (
     <div className="flex justify-between gap-4">
       <span className="text-gray-500">{label}</span>
 
-      <span className="text-gray-800 font-medium break-all text-right">
+      <span className={`font-medium break-all text-right ${className}`}>
         {value}
+
         {copy && (
           <button
-            onClick={handleCopy}
+            onClick={() => navigator.clipboard.writeText(value)}
             className="ml-2 text-xs text-blue-500 hover:underline"
           >
             Copy
