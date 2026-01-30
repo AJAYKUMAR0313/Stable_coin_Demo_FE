@@ -85,19 +85,19 @@ export const useOfframpStore = create((set, get) => ({
       });
 
       // Update token balance with new balance from result
-      if (result.newBalance !== undefined) {
-        set((state) => ({
-          selectedToken: {
-            ...state.selectedToken,
-            balance: result.newBalance
-          },
-          availableTokens: state.availableTokens.map(token =>
-            token.symbol === selectedToken.symbol
-              ? { ...token, balance: result.newBalance }
-              : token
-          )
-        }));
-      }
+    //   if (result.newBalance !== undefined) {
+    //     set((state) => ({
+    //       selectedToken: {
+    //         ...state.selectedToken,
+    //         balance: result.newBalance
+    //       },
+    //       availableTokens: state.availableTokens.map(token =>
+    //         token.symbol === selectedToken.symbol
+    //           ? { ...token, balance: result.newBalance }
+    //           : token
+    //       )
+    //     }));
+    //   }
 
       set({
         withdrawalStatus: "SUCCESS",
