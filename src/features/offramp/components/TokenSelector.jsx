@@ -15,7 +15,7 @@ export default function TokenSelector() {
   }, []);
 
   return (
-    <div className="mb-8">
+    <div className="mb-4">
       <label className="block text-sm font-semibold text-gray-700 mb-3">
         Select Token to Sell
       </label>
@@ -27,7 +27,7 @@ export default function TokenSelector() {
             const token = availableTokens.find(t => t.symbol === e.target.value);
             selectToken(token);
           }}
-          className="w-full px-4 py-3 text-base border-2 border-gray-200 rounded-xl focus:border-black focus:outline-none appearance-none bg-white cursor-pointer transition-colors"
+          className="w-full px-4 py-1.5 text-base border-2 border-gray-200 rounded-xl focus:border-black focus:outline-none appearance-none bg-white cursor-pointer transition-colors"
         >
           <option value="">Choose a token</option>
           {availableTokens.map(token => {
@@ -48,7 +48,7 @@ export default function TokenSelector() {
 
       {/* Selected Token Info */}
       {selectedToken && (
-        <div className="mt-3 p-3 bg-gray-50 rounded-lg flex items-center justify-between">
+        <div className="mt-1 p-1.5 bg-gray-50 rounded-lg flex items-center justify-between">
           <div>
             <div className="text-sm font-semibold text-gray-900">
               {selectedToken.name}

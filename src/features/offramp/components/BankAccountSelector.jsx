@@ -33,7 +33,7 @@ export default function BankAccountSelector() {
   // If showing add new form
   if (showAddNew) {
     return (
-      <div className="mb-8">
+      <div className="mb-4">
         <div className="flex justify-between items-center mb-4">
           <label className="text-sm font-semibold text-gray-700">
             Add New Bank Account
@@ -54,7 +54,7 @@ export default function BankAccountSelector() {
 
   // Show saved accounts
   return (
-    <div className="mb-8">
+    <div className="mb-4">
       <label className="block text-sm font-semibold text-gray-700 mb-3">
         Bank Account
       </label>
