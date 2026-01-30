@@ -145,19 +145,19 @@ export async function executeWithdrawalRequest({ token, amount, bankAccount }) {
     });
 
     // The API returns a transaction hash string
-    const transactionHash = response.data;
+    const transactionHash = response.data.tx_hash;
 
     // Calculate new balance (optimistic update)
     // In real app, you'd fetch fresh balance from API
-    const currentTokens = await fetchAvailableTokens();
-    const currentToken = currentTokens.find(t => t.symbol === token);
-    const newBalance = currentToken ? (currentToken.balance - amount) : 0;
+    // const currentTokens = await fetchAvailableTokens();
+    // const currentToken = currentTokens.find(t => t.symbol === token);
+    // const newBalance = currentToken ? (currentToken.balance - amount) : 0;
 
     return {
       success: true,
       transactionHash: transactionHash,
-      newBalance: newBalance,
-      estimatedDays: 3, // Fake timeline for display
+    //   newBalance: newBalance,
+      estimatedDays: 2, // Fake timeline for display
       bankAccount: bankAccount // Pass through for display
     };
   } catch (error) {
