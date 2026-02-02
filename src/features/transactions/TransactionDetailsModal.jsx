@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import TransactionHistory from "./TransactionHistory";
-import { formatDate } from "./commonFunctions";
 
 export default function TransactionDetailsModal({ tx, onClose }) {
   if (!tx) return null;
@@ -82,7 +81,7 @@ export default function TransactionDetailsModal({ tx, onClose }) {
           />
           <Detail label="From" value={tx.from_address} />
           <Detail label="To" value={tx.to_address} />
-          <Detail label="Timestamp" value={formatDate(tx.timestamp)} />
+          <Detail label="Timestamp" value={tx.timestamp} />
         </div>
 
         {/* Footer */}

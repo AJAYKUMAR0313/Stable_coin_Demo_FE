@@ -1,25 +1,30 @@
-import { useEffect } from "react";
+import { useEffect, useRef} from "react";
 import { useOfframpStore } from "../offrampStore";
 
 export default function OfframpResult({ onNewWithdrawal, onGoToDashboard }) {
-  const { 
-    withdrawalStatus, 
-    withdrawalResult, 
+  const {
+    withdrawalStatus,
+    withdrawalResult,
     errorMessage,
     executeWithdrawal,
     amount,
     selectedToken,
     selectedBankAccount,
-    conversionRates
+    conversionRates,
   } = useOfframpStore();
 
+  const hasRun = useRef(false);
+
   useEffect(() => {
-    if (withdrawalStatus === "IDLE") {
+    if (!hasRun.current && withdrawalStatus === "IDLE") {
+      hasRun.current = true;
       executeWithdrawal();
     }
   }, []);
 
-  const rate = selectedToken ? (conversionRates[selectedToken.symbol]?.rateInr || 0) : 0;
+  const rate = selectedToken
+    ? conversionRates[selectedToken.symbol]?.rateInr || 0
+    : 0;
   const total = amount && rate ? (Number(amount) * rate).toFixed(2) : 0;
 
   // Processing State
@@ -28,11 +33,11 @@ export default function OfframpResult({ onNewWithdrawal, onGoToDashboard }) {
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-10">
         <div className="text-center py-10">
           <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full mx-auto mb-6 animate-spin" />
-          
+
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             Processing Withdrawal
           </h2>
-          
+
           <p className="text-gray-600">
             Please wait while we process your transaction...
           </p>
@@ -43,7 +48,7 @@ export default function OfframpResult({ onNewWithdrawal, onGoToDashboard }) {
 
   // Success State
   if (withdrawalStatus === "SUCCESS") {
-    const shortTxHash = withdrawalResult?.transactionHash 
+    const shortTxHash = withdrawalResult?.transactionHash
       ? `${withdrawalResult.transactionHash.slice(0, 8)}...${withdrawalResult.transactionHash.slice(-6)}`
       : "";
 
@@ -53,11 +58,11 @@ export default function OfframpResult({ onNewWithdrawal, onGoToDashboard }) {
           <div className="text-7xl text-green-500 mb-4 animate-[scaleIn_0.5s_ease-out]">
             ✓
           </div>
-          
+
           <h2 className="text-2xl sm:text-3xl font-bold text-green-600 mb-2">
             Withdrawal Initiated!
           </h2>
-          
+
           <p className="text-gray-600 mb-6">
             {amount} {selectedToken?.symbol} converted to ₹{total}
           </p>
@@ -66,15 +71,17 @@ export default function OfframpResult({ onNewWithdrawal, onGoToDashboard }) {
           {withdrawalResult?.transactionHash && (
             <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl mb-6">
               <p className="text-xs text-gray-600 mb-2">Transaction Hash</p>
-              
+
               <div className="flex items-center justify-between gap-2">
                 <code className="text-xs font-mono px-3 py-1.5 bg-white border border-gray-200 rounded-lg flex-1">
                   {shortTxHash}
                 </code>
-                
+
                 <button
                   onClick={() => {
-                    navigator.clipboard.writeText(withdrawalResult.transactionHash);
+                    navigator.clipboard.writeText(
+                      withdrawalResult.transactionHash,
+                    );
                   }}
                   className="px-3 py-1.5 bg-black text-white text-xs rounded-lg hover:bg-gray-800 whitespace-nowrap"
                 >
@@ -97,12 +104,14 @@ export default function OfframpResult({ onNewWithdrawal, onGoToDashboard }) {
           {/* Bank Details */}
           {selectedBankAccount && (
             <div className="p-4 bg-green-50 border border-green-500 rounded-xl mb-6">
-              <p className="text-xs text-gray-600 mb-2">Withdrawal Destination</p>
+              <p className="text-xs text-gray-600 mb-2">
+                Withdrawal Destination
+              </p>
               <p className="text-base font-semibold text-gray-900 mb-1">
                 {selectedBankAccount.bankName}
               </p>
               <p className="text-sm text-gray-600 mb-2">
-                {selectedBankAccount.accountNumber.length > 10 
+                {selectedBankAccount.accountNumber.length > 10
                   ? `****${selectedBankAccount.accountNumber.slice(-4)}`
                   : selectedBankAccount.accountNumber}
               </p>
@@ -160,17 +169,16 @@ export default function OfframpResult({ onNewWithdrawal, onGoToDashboard }) {
     return (
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-10">
         <div className="text-center py-5">
-          <div className="text-7xl text-red-500 mb-4">
-            ✗
-          </div>
-          
+          <div className="text-7xl text-red-500 mb-4">✗</div>
+
           <h2 className="text-2xl sm:text-3xl font-bold text-red-600 mb-2">
             Withdrawal Failed
           </h2>
-          
+
           <div className="p-4 bg-red-50 border border-red-500 rounded-xl my-6">
             <p className="text-sm text-red-900">
-              {errorMessage || "An error occurred while processing your withdrawal. Please try again."}
+              {errorMessage ||
+                "An error occurred while processing your withdrawal. Please try again."}
             </p>
           </div>
 
