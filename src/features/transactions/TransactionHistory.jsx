@@ -1,53 +1,70 @@
 import { useEffect, useState } from "react";
-// import axios from "axios";
-import { mockTransactions } from "./mockTransactions";
+import axios from "axios";
+// import { mockTransactions } from "./mockTransactions";
 import TransactionDetailsModal from "./TransactionDetailsModal";
 import { useNavigate } from "react-router-dom";
+import { formatDate } from "./commonFunctions.js";
+import { statusStyle } from "./commonFunctions.js";
 
-export default function TransactionHistory() {
+function TransactionHistory() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTx, setSelectedTx] = useState(null);
   const navigate = useNavigate();
 
-  //   const fetchTransactions = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:8000/transactions/${localStorage.getItem("wallet_address")}`
-  //       );
-  //       setTransactions(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching transactions", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+    const fetchTransactions = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/transactions/transactions/${localStorage.getItem("wallet_address")}`
+        );
+        setTransactions(response.data);
+      } catch (error) {
+        console.error("Error fetching transactions", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   useEffect(() => {
-  //     fetchTransactions();
-  //   }, []);
-  useEffect(() => {
-    setTransactions(mockTransactions);
-    setLoading(false);
-  }, []);
+    useEffect(() => {
+      fetchTransactions();
+    }, []);
+//   useEffect(() => {
+//     setTransactions(mockTransactions);
+//     setLoading(false);
+//   }, []);
 
-  const formatDate = (timestamp) => {
-    if (!timestamp) return "-";
-    return new Date(timestamp * 1000).toLocaleString();
-  };
+//  const formatDate = (timestamp) => {
+//   if (!timestamp) return "-";
 
-  const statusStyle = (status) => {
-    switch (status) {
-      case "SUCCESS":
-        return "bg-green-100 text-green-700";
-      case "PENDING":
-        return "bg-yellow-100 text-yellow-700";
-      case "FAILED":
-        return "bg-red-100 text-red-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
+//   // If it's a number (unix timestamp)
+//   if (typeof timestamp === "number") {
+//     // seconds → ms
+//     return new Date(
+//       timestamp.toString().length === 10 ? timestamp * 1000 : timestamp
+//     ).toLocaleString();
+//   }
+
+//   // If it's an ISO string
+//   if (typeof timestamp === "string") {
+//     return new Date(timestamp).toLocaleString();
+//   }
+
+//   return "-";
+// };
+
+
+//   const statusStyle = (status) => {
+//     switch (status) {
+//       case "SUCCESS":
+//         return "bg-green-100 text-green-700";
+//       case "PENDING":
+//         return "bg-yellow-100 text-yellow-700";
+//       case "FAILED":
+//         return "bg-red-100 text-red-700";
+//       default:
+//         return "bg-gray-100 text-gray-700";
+//     }
+//   };
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-6">
@@ -91,25 +108,25 @@ export default function TransactionHistory() {
 
                   <td
                     className={`py-3 font-medium ${
-                      tx.type === "CREDIT" ? "text-green-600" : "text-red-600"
+                      tx.transaction_type === "RECEIVED" ? "text-green-600" : "text-red-600"
                     }`}
                   >
-                    {tx.type}
+                    {tx.transaction_type}
                   </td>
 
                   <td className="py-3 font-semibold">
-                    {tx.value_eth} {tx.asset}
+                    {tx.amount} {tx.asset?.startsWith("Token:") ? "USDC" : tx.asset}
                   </td>
 
-                  <td className="py-3">{tx.asset}</td>
+                  <td className="py-3">{tx.asset?.startsWith("Token:") ? "USDC" : tx.asset}</td>
 
                   <td className="py-3">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-medium ${statusStyle(
-                        tx.transaction_status,
+                        tx.status,
                       )}`}
                     >
-                      {tx.transaction_status}
+                      {tx.status}
                     </span>
                   </td>
 
@@ -132,3 +149,5 @@ export default function TransactionHistory() {
     </div>
   );
 }
+
+export default TransactionHistory;

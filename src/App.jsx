@@ -7,6 +7,8 @@ import FiatOnRamp from "./features/onramp/pages/FiatOnRamp";
 import TransferPage from "./features/transfer/pages/TransferPage";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import TransactionHistory from "./features/transactions/TransactionHistory";
+import OfframpPage from "./features/offramp/pages/OfframpPage";
+
 
 export default function App() {
   return (
@@ -20,6 +22,7 @@ export default function App() {
           <Route path="/dashboard/buy" element={<FiatOnRamp />} />
           <Route path="/dashboard/transfer" element={<TransferPage />} />
           <Route path="/dashboard/transactions" element={<TransactionHistory />} />
+          <Route path="/dashboard/offramp" element={<OfframpPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
