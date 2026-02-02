@@ -104,7 +104,7 @@ function TransactionHistory() {
                   onClick={() => setSelectedTx(tx)}
                   className="border-b last:border-none cursor-pointer hover:bg-gray-50"
                 >
-                  <td className="py-3">{formatDate(tx.timestamp)}</td>
+                  <td className="py-3">{tx.timestamp}</td>
 
                   <td
                     className={`py-3 font-medium ${
