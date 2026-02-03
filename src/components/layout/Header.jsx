@@ -36,7 +36,7 @@ export default function Header({ user }) {
       <div className="px-6 py-4 flex justify-between items-center">
         <button
           onClick={() => navigate("/dashboard")}
-          className="bg-gray-50 px-4 py-2 rounded-lg hover:bg-gray-100"
+          className=" px-4 py-2 rounded-lg "
         >
           <h1 className="text-3xl font-extrabold text-gray-800">Demo Stable</h1>
         </button>
@@ -45,7 +45,7 @@ export default function Header({ user }) {
         <div className="relative" ref={dropdownRef}>
           <div
             onClick={() => setOpen(!open)}
-            className="bg-gray-50 px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-100"
+            className="px-4 py-2 rounded-lg cursor-pointer"
           >
             <p className="text-sm font-medium text-gray-700">{user.email}</p>
           </div>

@@ -45,7 +45,7 @@ export default function LoginPage() {
       }
     } catch (error) {
       // ❌ Network / server error
-      setError("Something went wrong. Please try again.");
+      setError(error.response?.data?.detail || "Login failed");
     } finally {
       setLoading(false);
     }

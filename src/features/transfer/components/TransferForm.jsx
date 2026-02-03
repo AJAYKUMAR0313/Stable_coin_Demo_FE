@@ -9,8 +9,9 @@ import AmountInput from "./AmountInput";
 import BalanceDisplay from "./BalanceDisplay";
 
 export default function TransferForm({ onContinue }) {
-  const { recipient, setRecipient, selectedToken, amount, note, setNote } = useTransferStore();
-  
+  const { recipient, setRecipient, selectedToken, amount, note, setNote } =
+    useTransferStore();
+
   const [recipientError, setRecipientError] = useState(null);
   const [amountError, setAmountError] = useState(null);
 
@@ -34,7 +35,9 @@ export default function TransferForm({ onContinue }) {
 
   return (
     <Card>
-      <Text.Title style={{ marginTop: "0", marginBottom: "22px", fontSize: "24px" }}>
+      <Text.Title
+        style={{ marginTop: "0", marginBottom: "22px", fontSize: "24px" }}
+      >
         Transfer Details
       </Text.Title>
 
@@ -50,17 +53,16 @@ export default function TransferForm({ onContinue }) {
       <TokenSelector />
 
       {/* Amount Input */}
-      <AmountInput
-        error={amountError}
-        setError={setAmountError}
-      />
+      <AmountInput error={amountError} setError={setAmountError} />
 
       {/* Balance Display */}
       <BalanceDisplay />
 
       {/* Optional Note */}
       <div style={{ marginBottom: "32px" }}>
-        <Text.Label style={{ marginBottom: "12px", display: "block", fontSize: "15px" }}>
+        <Text.Label
+          style={{ marginBottom: "12px", display: "block", fontSize: "15px" }}
+        >
           Note (Optional)
         </Text.Label>
         <textarea
@@ -78,16 +80,18 @@ export default function TransferForm({ onContinue }) {
             resize: "vertical",
             minHeight: "100px",
             fontFamily: "inherit",
-            transition: "border-color 0.2s"
+            transition: "border-color 0.2s",
           }}
-          onFocus={(e) => e.target.style.borderColor = "#000"}
-          onBlur={(e) => e.target.style.borderColor = "#e0e0e0"}
+          onFocus={(e) => (e.target.style.borderColor = "#000")}
+          onBlur={(e) => (e.target.style.borderColor = "#e0e0e0")}
         />
-        <div style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: "4px"
-        }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            marginTop: "4px",
+          }}
+        >
           <Text.Muted style={{ fontSize: "12px" }}>
             {note.length}/200
           </Text.Muted>
@@ -95,21 +99,52 @@ export default function TransferForm({ onContinue }) {
       </div>
 
       {/* Continue Button */}
-      <Button
-        onClick={handleContinue}
-        disabled={!isFormValid()}
-      >
+      <Button onClick={handleContinue} disabled={!isFormValid()}>
         Continue to Review
       </Button>
 
+      {/* Back Button */}
+      <a
+        onClick={() => window.history.back()}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "10px",
+          width: "100px",
+          backgroundColor: "#f0f0f0",
+          color: "#000",
+          border: "none",
+          padding: "10px",
+          borderRadius: "8px",
+          cursor: "pointer",
+          textAlign: "center",
+        }}
+      >
+        Back
+      </a>
+
       {/* Helper Text */}
       {!isFormValid() && (
-        <Text.Muted style={{ marginTop: "12px", textAlign: "center", fontSize: "13px" }}>
+        <Text.Muted
+          style={{ marginTop: "12px", textAlign: "center", fontSize: "13px" }}
+        >
           {!recipient && "Enter recipient address"}
           {recipient && recipientError && "Fix recipient address"}
-          {recipient && !recipientError && !selectedToken && " • Select a token"}
-          {recipient && !recipientError && selectedToken && !amount && " • Enter amount"}
-          {recipient && !recipientError && selectedToken && amount && amountError && " • Fix amount"}
+          {recipient &&
+            !recipientError &&
+            !selectedToken &&
+            " • Select a token"}
+          {recipient &&
+            !recipientError &&
+            selectedToken &&
+            !amount &&
+            " • Enter amount"}
+          {recipient &&
+            !recipientError &&
+            selectedToken &&
+            amount &&
+            amountError &&
+            " • Fix amount"}
         </Text.Muted>
       )}
     </Card>
