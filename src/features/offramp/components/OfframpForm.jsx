@@ -7,7 +7,7 @@ import BankAccountSelector from "./BankAccountSelector";
 
 export default function OfframpForm({ onContinue }) {
   const { selectedToken, amount, selectedBankAccount } = useOfframpStore();
-  
+
   const [amountError, setAmountError] = useState(null);
 
   const isFormValid = () => {
@@ -36,10 +36,7 @@ export default function OfframpForm({ onContinue }) {
       <TokenSelector />
 
       {/* Amount Input */}
-      <AmountInput
-        error={amountError}
-        setError={setAmountError}
-      />
+      <AmountInput error={amountError} setError={setAmountError} />
 
       {/* Rate Preview */}
       <RatePreview />
@@ -56,13 +53,36 @@ export default function OfframpForm({ onContinue }) {
         Continue to Review
       </button>
 
+      <a
+        onClick={() => window.history.back()}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "10px",
+          width: "100px",
+          backgroundColor: "#f0f0f0",
+          color: "#000",
+          border: "none",
+          padding: "10px",
+          borderRadius: "8px",
+          cursor: "pointer",
+          textAlign: "center",
+        }}
+      >
+        Back
+      </a>
+
       {/* Helper Text */}
       {!isFormValid() && (
         <p className="mt-3 text-center text-xs text-gray-500">
           {!selectedToken && "Select a token"}
           {selectedToken && !amount && " • Enter amount"}
           {selectedToken && amount && amountError && " • Fix amount"}
-          {selectedToken && amount && !amountError && !selectedBankAccount && " • Select or add bank account"}
+          {selectedToken &&
+            amount &&
+            !amountError &&
+            !selectedBankAccount &&
+            " • Select or add bank account"}
         </p>
       )}
     </div>
