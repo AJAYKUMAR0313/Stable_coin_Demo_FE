@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const StablecoinDashboard = () => {
-
   const navigate = useNavigate();
 
   const stablecoins = [
@@ -34,19 +33,21 @@ const StablecoinDashboard = () => {
 
   const recentTransactions = [
     { id: 1, type: "Buy", coin: "USDC", amount: 500, date: "Today, 10:30 AM" },
-    { id: 2, type: "Transfer", coin: "USDT", amount: 50, date: "Yesterday, 3:45 PM" },
+    {
+      id: 2,
+      type: "Transfer",
+      coin: "USDT",
+      amount: 50,
+      date: "Yesterday, 3:45 PM",
+    },
     { id: 3, type: "Convert", coin: "JPM", amount: 5, date: "Feb 3, 11:20 AM" },
   ];
 
-
   return (
     <div className="min-h-screen text-white bg-gradient-to-br from-[#071D3A] via-[#0B2A5B] to-[#0666E4]">
-
       <div className="max-w-[1600px] mx-auto p-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
-
         {/* MAIN */}
         <main className="lg:col-span-3 flex flex-col gap-8">
-
           {/* TOP BALANCE CARDS */}
           <div className="grid md:grid-cols-2 gap-6">
             {[
@@ -99,16 +100,32 @@ const StablecoinDashboard = () => {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { icon: "💰", label: "Buy" },
-                { icon: "💱", label: "Transfer" },
-                { icon: "💵", label: "Convert" },
-                { icon: "📊", label: "Analytics" },
+                {
+                  icon: "💰",
+                  label: "Buy",
+                  path: "/dashboard/stablecoin/buy-stable",
+                },
+                {
+                  icon: "💱",
+                  label: "Transfer",
+                  path: "/dashboard/stablecoin/transfer",
+                },
+                {
+                  icon: "💵",
+                  label: "Convert",
+                  path: "/dashboard/stablecoin/convert",
+                },
+                {
+                  icon: "📊",
+                  label: "Analytics",
+                  path: "/dashboard/stablecoin/analytics",
+                },
               ].map((item, i) => (
                 <button
                   key={i}
                   className="p-5 rounded-xl bg-white/10 border border-white/15
-                  hover:bg-white/20 hover:-translate-y-1 transition text-center"
-                  onClick={() => item.label === "Buy" && navigate("/dashboard/stablecoin/buy-stable")}
+      hover:bg-white/20 hover:-translate-y-1 transition text-center"
+                  onClick={() => navigate(item.path)}
                 >
                   <div className="text-4xl mb-2">{item.icon}</div>
                   <p className="font-semibold text-sm">{item.label}</p>
@@ -129,7 +146,9 @@ const StablecoinDashboard = () => {
                   bg-white/10 border border-white/15 hover:bg-white/20 transition"
                 >
                   <div>
-                    <p className="font-medium">{tx.type} {tx.coin}</p>
+                    <p className="font-medium">
+                      {tx.type} {tx.coin}
+                    </p>
                     <p className="text-xs text-white/60">{tx.date}</p>
                   </div>
                   <p className="font-bold text-cyan-300">${tx.amount}</p>
@@ -156,12 +175,8 @@ const StablecoinDashboard = () => {
                 <span className="text-xs text-cyan-300 font-semibold">
                   {article.category}
                 </span>
-                <p className="text-sm font-semibold mt-2">
-                  {article.title}
-                </p>
-                <p className="text-xs text-white/60 mt-2">
-                  {article.excerpt}
-                </p>
+                <p className="text-sm font-semibold mt-2">{article.title}</p>
+                <p className="text-xs text-white/60 mt-2">{article.excerpt}</p>
               </div>
             </div>
           ))}

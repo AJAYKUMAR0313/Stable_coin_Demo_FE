@@ -143,7 +143,7 @@ export default function FiatOnRamp() {
             </div>
 
             <button
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate("/dashboard/stablecoin")}
               className="mt-6 px-6 py-2
               bg-white/10 border border-white/15
               text-white/80 rounded-lg
