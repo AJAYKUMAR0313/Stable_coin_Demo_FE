@@ -33,12 +33,13 @@ export default function NavButtons() {
               }
               ${item === "Home" ? "cursor-pointer" : "cursor-not-allowed"}
             `}
+            onClick={() => {
+              if (item?.toLowerCase() === "home") {
+                navigate("/dashboard");
+              }
+            }}
           >
-            {item?.toLowerCase() === "home" ? (
-              <span onClick={() => navigate("/dashboard")}>{item}</span>
-            ) : (
-              <span onClick={() => navigate(`/dashboard/${item.toLowerCase()}`)}>{item}</span>
-            )}
+            {item}
           </button>
         ))}
 

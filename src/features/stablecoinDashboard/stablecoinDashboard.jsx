@@ -136,7 +136,7 @@ const StablecoinDashboard = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { icon: "💰", label: "Buy", path: "/dashboard/stablecoin/buy-stable" },
-                { icon: "💱", label: "Transfer", path: "/dashboard/stablecoin/transfer" },
+                { icon: "💱", label: "Transfer", path: "/dashboard/stablecoin/transfer-stable" },
                 { icon: "💵", label: "Convert", path: "/dashboard/stablecoin/convert" },
                 { icon: "📊", label: "Analytics", path: "/dashboard/stablecoin/analytics" },
               ].map((item, i) => (
