@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function DashboardDemo() {
+    const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#071D3A] via-[#0B2A5B] to-[#0666E4] text-white">
 
@@ -30,6 +32,7 @@ export default function DashboardDemo() {
               className="px-5 py-2 rounded-full text-sm font-semibold
               bg-gradient-to-r from-cyan-400 to-blue-600
               text-black shadow-lg hover:scale-105 transition"
+              onClick={() => navigate("/dashboard/stablecoin")}
             >
               StableCoins
             </button>

@@ -8,11 +8,10 @@ import TransferPage from "./features/transfer/pages/TransferPage";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import TransactionHistory from "./features/transactions/TransactionHistory";
 import OfframpPage from "./features/offramp/pages/OfframpPage";
-<<<<<<< HEAD
+
 import DashboardDemo from "./pages/DashboardDemo";
-=======
 import StablecoinDashboard from "./features/stablecoinDashboard/stablecoinDashboard";
->>>>>>> 7e895af4a402020b7093c1604d6d3bfa8968cca2
+
 
 
 export default function App() {
