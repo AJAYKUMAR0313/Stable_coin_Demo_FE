@@ -8,6 +8,7 @@ import TransferPage from "./features/transfer/pages/TransferPage";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import TransactionHistory from "./features/transactions/TransactionHistory";
 import OfframpPage from "./features/offramp/pages/OfframpPage";
+import StablecoinDashboard from "./features/stablecoinDashboard/stablecoinDashboard";
 
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/dashboard/transfer" element={<TransferPage />} />
           <Route path="/dashboard/transactions" element={<TransactionHistory />} />
           <Route path="/dashboard/offramp" element={<OfframpPage />} />
+          <Route path="/dashboard/stablecoin" element={<StablecoinDashboard/>} />
         </Route>
       </Routes>
     </BrowserRouter>
