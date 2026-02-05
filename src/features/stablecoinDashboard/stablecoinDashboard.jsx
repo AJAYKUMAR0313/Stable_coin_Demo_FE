@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const StablecoinDashboard = () => {
+
+  const navigate = useNavigate();
 
   const stablecoins = [
     { name: "USDC", balance: 1352, change: "+2.5%", icon: "🔵" },
@@ -34,6 +37,7 @@ const StablecoinDashboard = () => {
     { id: 2, type: "Transfer", coin: "USDT", amount: 50, date: "Yesterday, 3:45 PM" },
     { id: 3, type: "Convert", coin: "JPM", amount: 5, date: "Feb 3, 11:20 AM" },
   ];
+
 
   return (
     <div className="min-h-screen text-white bg-gradient-to-br from-[#071D3A] via-[#0B2A5B] to-[#0666E4]">
@@ -104,6 +108,7 @@ const StablecoinDashboard = () => {
                   key={i}
                   className="p-5 rounded-xl bg-white/10 border border-white/15
                   hover:bg-white/20 hover:-translate-y-1 transition text-center"
+                  onClick={() => item.label === "Buy" && navigate("/dashboard/stablecoin/buy-stable")}
                 >
                   <div className="text-4xl mb-2">{item.icon}</div>
                   <p className="font-semibold text-sm">{item.label}</p>

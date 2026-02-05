@@ -31,6 +31,7 @@ export default function NavButtons() {
                   ? "bg-white/20 text-white shadow-md"
                   : "bg-white/10 text-white/80 hover:bg-white/20 hover:scale-105"
               }
+              ${item === "Home" ? "cursor-pointer" : "cursor-not-allowed"}
             `}
           >
             {item?.toLowerCase() === "home" ? (
@@ -47,7 +48,7 @@ export default function NavButtons() {
           className="px-5 py-2 rounded-full text-sm font-semibold
             bg-gradient-to-r from-cyan-400 to-blue-600
             text-black shadow-lg
-            hover:scale-105 transition"
+            hover:scale-105 transition cursor-pointer"
         >
           StableCoins
         </button>
