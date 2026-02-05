@@ -7,7 +7,6 @@ export const useOnRampStore = create((set, get) => ({
   tokenAmount: "",
   conversionStatus: "IDLE", // IDLE, PENDING, CONFIRMED
   transactionHash: null,
-
   loadStablecoins: async () => {
     const data = await fetchSupportedStablecoins();
     set({ stablecoins: data });
@@ -30,7 +29,7 @@ export const useOnRampStore = create((set, get) => ({
       });
 
       set({
-        transactionHash: res.txHash,
+        transactionHash: res.tx_hash,
         conversionStatus: "CONFIRMED",
       });
     } catch (error) {

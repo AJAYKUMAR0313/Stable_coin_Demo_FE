@@ -83,8 +83,11 @@ export const useOnRampStore = create((set, get) => ({
             address: localStorage.getItem("wallet_address"),
           });
 
+        // console.log("buyStablecoins response:", res);
+        // console.log("tx_hash:", res?.txHash);
+
       set({
-        transactionHash: res.txHash,
+        transactionHash: res.tx_hash,
         conversionStatus: "CONFIRMED",
       });
       
