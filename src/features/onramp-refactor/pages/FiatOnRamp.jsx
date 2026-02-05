@@ -5,6 +5,7 @@ import PurchaseSummaryPanel from "../components/PurchaseSummaryPanel";
 import SummaryModal from "../components/SummaryModal";
 import ConfirmationModal from "../components/ConfirmationModal";
 import TransactionStatus from "../components/TransactionStatus";
+import { useNavigate } from "react-router-dom";
 
 export default function FiatOnRamp() {
   const {
@@ -20,6 +21,7 @@ export default function FiatOnRamp() {
 
   const [showSummary, setShowSummary] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadStablecoins();
@@ -51,28 +53,37 @@ export default function FiatOnRamp() {
   // Success Screen
   if (conversionStatus === "CONFIRMED") {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
-          <div className="text-center">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-scale-in">
-              <span className="text-4xl text-green-600">✓</span>
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Transaction Successful!
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Your tokens have been credited
-            </p>
-
-            <TransactionStatus />
-
-            <button
-              onClick={handleStartNew}
-              className="w-full mt-6 px-4 py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors"
-            >
-              Start New Transaction
-            </button>
+      <div
+        className="min-h-screen bg-gradient-to-br from-[#071D3A] via-[#0B2A5B] to-[#0666E4]
+      flex items-center justify-center p-6 text-white"
+      >
+        <div
+          className="max-w-md w-full bg-white/10 backdrop-blur-xl
+        border border-white/15 rounded-2xl shadow-2xl p-8 text-center"
+        >
+          <div
+            className="w-20 h-20 bg-green-400/20 rounded-full
+          flex items-center justify-center mx-auto mb-4 animate-scale-in"
+          >
+            <span className="text-4xl text-green-400">✓</span>
           </div>
+
+          <h2 className="text-2xl font-bold mb-2">Transaction Successful</h2>
+          <p className="text-white/70 mb-6">
+            Your tokens have been credited to your wallet
+          </p>
+
+          <TransactionStatus />
+
+          <button
+            onClick={handleStartNew}
+            className="w-full mt-6 px-4 py-3
+          bg-gradient-to-r from-cyan-400 to-blue-600
+          text-black font-semibold rounded-xl
+          hover:scale-105 transition"
+          >
+            Start New Transaction
+          </button>
         </div>
       </div>
     );
@@ -81,93 +92,93 @@ export default function FiatOnRamp() {
   // Processing Screen
   if (conversionStatus === "PENDING") {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-6" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Processing Transaction
-            </h2>
-            <p className="text-gray-600">
-              Please wait while we send your tokens...
-            </p>
-          </div>
+      <div
+        className="min-h-screen bg-gradient-to-br from-[#071D3A] via-[#0B2A5B] to-[#0666E4]
+      flex items-center justify-center p-6 text-white"
+      >
+        <div
+          className="max-w-md w-full bg-white/10 backdrop-blur-xl
+        border border-white/15 rounded-2xl shadow-2xl p-8 text-center"
+        >
+          <div
+            className="w-16 h-16 border-4 border-white/20
+          border-t-cyan-400 rounded-full animate-spin mx-auto mb-6"
+          />
+
+          <h2 className="text-2xl font-bold mb-2">Processing Transaction</h2>
+          <p className="text-white/70">
+            Please wait while we send your tokens…
+          </p>
         </div>
       </div>
     );
   }
 
   // Main Purchase Page
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Token Selection (2/3 width) */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
-              <h1 className="text-3xl font-bold text-gray-900 mb-6">
-                Buy Stable Coins
-              </h1>
+ return (
+  <div className="min-h-screen text-white
+    bg-gradient-to-br from-[#071D3A] via-[#0B2A5B] to-[#0666E4]">
 
-              <div className="space-y-3">
-                {stablecoins.map((token) => (
-                  <StablecoinCard
-                    key={token.symbol}
-                    token={token}
-                    isSelected={selectedToken?.symbol === token.symbol}
-                    onSelect={selectToken}
-                  />
-                ))}
-              </div>
+    <div className="max-w-7xl mx-auto p-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-              <button
-                onClick={() => window.history.back()}
-                className="mt-6 px-6 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors"
-              >
-                ← Back
-              </button>
+        {/* LEFT – TOKEN SELECTION */}
+        <div className="lg:col-span-2">
+          <div className="bg-white/10 backdrop-blur-xl
+            border border-white/15 rounded-2xl shadow-2xl p-6">
+
+            <h1 className="text-3xl font-bold mb-6">
+              Buy Stablecoins
+            </h1>
+
+            <div className="space-y-3">
+              {stablecoins.map((token) => (
+                <StablecoinCard
+                  key={token.symbol}
+                  token={token}
+                  isSelected={selectedToken?.symbol === token.symbol}
+                  onSelect={selectToken}
+                />
+              ))}
             </div>
-          </div>
 
-          {/* Right Column - Purchase Summary (1/3 width, sticky) */}
-          <div className="lg:col-span-1">
+            <button
+              onClick={() => navigate("/dashboard/stablecoin")}
+              className="mt-6 px-6 py-2
+              bg-white/10 border border-white/15
+              text-white/80 rounded-lg
+              hover:bg-white/20 transition"
+            >
+              ← Back to Dashboard
+            </button>
+          </div>
+        </div>
+
+        {/* RIGHT – SUMMARY */}
+        <div className="lg:col-span-1">
+          <div className="sticky top-24">
             <PurchaseSummaryPanel onContinue={handleContinue} />
           </div>
         </div>
       </div>
-
-      {/* Modals */}
-      <SummaryModal
-        open={showSummary}
-        onClose={() => setShowSummary(false)}
-        onProceed={handleProceedToPayment}
-        token={selectedToken}
-        amount={tokenAmount}
-      />
-
-      <ConfirmationModal
-        open={showConfirmation}
-        onClose={() => setShowConfirmation(false)}
-        token={selectedToken}
-        amount={tokenAmount}
-      />
-
-      {/* Animations */}
-      <style>{`
-        @keyframes scale-in {
-          from {
-            transform: scale(0);
-            opacity: 0;
-          }
-          to {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-        .animate-scale-in {
-          animation: scale-in 0.5s ease-out;
-        }
-      `}</style>
     </div>
-  );
+
+    {/* Modals stay the same */}
+    <SummaryModal
+      open={showSummary}
+      onClose={() => setShowSummary(false)}
+      onProceed={handleProceedToPayment}
+      token={selectedToken}
+      amount={tokenAmount}
+    />
+
+    <ConfirmationModal
+      open={showConfirmation}
+      onClose={() => setShowConfirmation(false)}
+      token={selectedToken}
+      amount={tokenAmount}
+    />
+  </div>
+);
+
 }

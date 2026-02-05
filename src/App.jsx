@@ -32,7 +32,7 @@ export default function App() {
           <Route path="/dashboard/transactions" element={<TransactionHistory />} />
           <Route path="/dashboard/offramp" element={<OfframpPage />} />
           <Route path="/dashboard/stablecoin" element={<StablecoinDashboard/>} />
-          <Route path="/dashboard/buy-stable" element={<FiatOnRampNew />} />
+          <Route path="/dashboard/stablecoin/buy-stable" element={<FiatOnRampNew />} />
 
         </Route>
       </Routes>

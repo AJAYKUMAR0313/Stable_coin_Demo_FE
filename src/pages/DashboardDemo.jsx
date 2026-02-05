@@ -11,7 +11,7 @@ export default function DashboardDemo() {
         {/* LEFT SECTION */}
         <div className="flex-1">
 
-          {/* CATEGORY PILLS */}
+          {/* CATEGORY PILLS
           <div className="flex gap-3 flex-wrap">
             {["Accounts", "Cards", "FD/RD", "Loans", "Invest", "Insure"].map(
               (item, i) => (
@@ -36,7 +36,7 @@ export default function DashboardDemo() {
             >
               StableCoins
             </button>
-          </div>
+          </div> */}
 
           {/* CARDS */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
