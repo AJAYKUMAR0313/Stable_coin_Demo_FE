@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "./Header.jsx";
+import NavButtons from "../../pages/NavButtons.jsx";
 
 export default function DashboardLayout() {
   const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ export default function DashboardLayout() {
   return (
     <div className="h-screen bg-gray-100 flex flex-col">
       <Header user={user} />
-
+      <NavButtons />
       {/* Scrollable content area */}
       <main className="flex-1 overflow-y-auto p-2">
         <Outlet />
