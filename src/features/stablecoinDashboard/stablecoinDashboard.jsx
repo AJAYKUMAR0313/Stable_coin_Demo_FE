@@ -11,6 +11,10 @@ const StablecoinDashboard = () => {
   const [selectedTx, setSelectedTx] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  /* Pagination */
+  const [page, setPage] = useState(1);
+  const limit = 1;
+
   /* Prevent scroll when modal open */
   useEffect(() => {
     document.body.style.overflow = selectedTx ? "hidden" : "auto";
@@ -27,8 +31,6 @@ const StablecoinDashboard = () => {
       id: 1,
       title: "Understanding Stablecoins: A Beginner's Guide",
       excerpt: "Stablecoins maintain value by pegging to fiat currencies.",
-      date: "Feb 5, 2026",
-      readTime: "5 min read",
       category: "Education",
       image: "📚",
     },
@@ -36,22 +38,28 @@ const StablecoinDashboard = () => {
       id: 2,
       title: "USDC vs USDT",
       excerpt: "Backing, transparency, and use cases compared.",
-      date: "Feb 4, 2026",
-      readTime: "7 min read",
       category: "Comparison",
       image: "⚖️",
     },
   ];
 
-  /* Fetch transactions */
+  /* Fetch transactions with pagination */
   const fetchTransactions = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:8000/transactions/transactions/${localStorage.getItem(
-          "wallet_address"
-        )}`
-      );
-      setTransactions(response.data);
+      setLoading(true);
+
+      const wallet = localStorage.getItem("wallet_address");
+      const offset = (page - 1) * limit;
+
+      const response = await axios.get(`http://localhost:8000/transactions/transactions/${wallet}`, {
+        params: {
+          wallet_address: wallet,
+          limit,
+          offset,
+        },
+      });
+
+      setTransactions(response.data || []);
     } catch (error) {
       console.error("Error fetching transactions:", error);
     } finally {
@@ -61,20 +69,16 @@ const StablecoinDashboard = () => {
 
   useEffect(() => {
     fetchTransactions();
-  }, []);
+  }, [page]);
 
   return (
     <div className="min-h-screen text-white bg-gradient-to-br from-[#071D3A] via-[#0B2A5B] to-[#0666E4]">
-      
-      {/* Blur background when modal open */}
       <div
         className={`max-w-[1600px] mx-auto p-8 grid grid-cols-1 lg:grid-cols-4 gap-8 transition-all duration-300 ${
           selectedTx ? "blur-sm pointer-events-none" : ""
         }`}
       >
-        {/* MAIN */}
         <main className="lg:col-span-3 flex flex-col gap-8">
-          
           {/* BALANCE */}
           <div className="grid md:grid-cols-2 gap-6">
             {[
@@ -86,23 +90,17 @@ const StablecoinDashboard = () => {
                 className="bg-white/10 backdrop-blur-xl border border-white/15 rounded-2xl p-7 shadow-xl hover:-translate-y-1 transition"
               >
                 <div className="flex justify-between mb-4">
-                  <span className="text-sm text-white/70">
-                    {item.label}
-                  </span>
+                  <span className="text-sm text-white/70">{item.label}</span>
                   <span className="text-3xl">{item.icon}</span>
                 </div>
-                <div className="text-4xl font-bold">
-                  {item.value}
-                </div>
+                <div className="text-4xl font-bold">{item.value}</div>
               </div>
             ))}
           </div>
 
           {/* HOLDINGS */}
           <section className="bg-white/10 backdrop-blur-xl border border-white/15 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold mb-5">
-              Stablecoin Holdings
-            </h2>
+            <h2 className="text-xl font-semibold mb-5">Stablecoin Holdings</h2>
 
             <div className="grid md:grid-cols-3 gap-4">
               {stablecoins.map((coin) => (
@@ -114,14 +112,10 @@ const StablecoinDashboard = () => {
                     <span className="text-4xl">{coin.icon}</span>
                     <div>
                       <p className="font-semibold">{coin.name}</p>
-                      <p className="text-xs text-green-400">
-                        {coin.change}
-                      </p>
+                      <p className="text-xs text-green-400">{coin.change}</p>
                     </div>
                   </div>
-                  <p className="text-2xl font-bold">
-                    ${coin.balance}
-                  </p>
+                  <p className="text-2xl font-bold">${coin.balance}</p>
                 </div>
               ))}
             </div>
@@ -129,9 +123,7 @@ const StablecoinDashboard = () => {
 
           {/* QUICK SERVICES */}
           <section className="bg-white/10 backdrop-blur-xl border border-white/15 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold mb-5">
-              Quick Services
-            </h2>
+            <h2 className="text-xl font-semibold mb-5">Quick Services</h2>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
@@ -146,9 +138,7 @@ const StablecoinDashboard = () => {
                   onClick={() => navigate(item.path)}
                 >
                   <div className="text-4xl mb-2">{item.icon}</div>
-                  <p className="font-semibold text-sm">
-                    {item.label}
-                  </p>
+                  <p className="font-semibold text-sm">{item.label}</p>
                 </button>
               ))}
             </div>
@@ -156,49 +146,68 @@ const StablecoinDashboard = () => {
 
           {/* TRANSACTIONS */}
           <section className="bg-white/10 backdrop-blur-xl border border-white/15 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold mb-5">
-              Recent Transactions
-            </h2>
+            <h2 className="text-xl font-semibold mb-5">Recent Transactions</h2>
 
             {loading ? (
-              <p className="text-white/70 text-sm">
-                Loading transactions...
-              </p>
+              <p className="text-white/70 text-sm">Loading transactions...</p>
             ) : transactions.length === 0 ? (
-              <p className="text-white/70 text-sm">
-                No transactions found
-              </p>
+              <p className="text-white/70 text-sm">No transactions found</p>
             ) : (
               <div className="flex flex-col gap-3">
-                {transactions.slice(0, 5).map((tx) => (
+                {transactions.map((tx) => (
                   <div
                     key={tx.tx_hash}
                     onClick={() => setSelectedTx(tx)}
                     className="flex justify-between items-center p-4 rounded-xl bg-white/10 border border-white/15 hover:bg-white/20 cursor-pointer transition"
                   >
                     <div>
-                      <p className={`font-medium ${
-                        tx.transaction_type === "RECEIVED"
-                          ? "text-green-400"
-                          : "text-red-400"
-                      }`}>
+                      <p
+                        className={`font-medium ${
+                          tx.transaction_type === "RECEIVED"
+                            ? "text-green-400"
+                            : "text-red-400"
+                        }`}
+                      >
                         {tx.transaction_type} {tx.asset}
                       </p>
-                      <p className="text-xs text-white/60">
-                        {tx.timestamp}
-                      </p>
+                      <p className="text-xs text-white/60">{tx.timestamp}</p>
                     </div>
 
                     <div className="text-right">
                       <p className="font-bold text-cyan-300">
                         {tx.amount} {tx.asset}
                       </p>
-                      <span className={`px-2 py-1 rounded-full text-xs ${statusStyle(tx.status)}`}>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs ${statusStyle(
+                          tx.status
+                        )}`}
+                      >
                         {tx.status}
                       </span>
                     </div>
                   </div>
                 ))}
+
+                {/* Pagination */}
+                <div className="flex justify-between items-center mt-4">
+                  <button
+                    disabled={page === 1}
+                    onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                    className="px-4 py-2 bg-white/10 rounded-lg disabled:opacity-40"
+                  >
+                    ← Previous
+                  </button>
+
+                  <span className="text-sm text-white/70">Page {page}</span>
+
+                  <button
+                    disabled={transactions.length < limit}
+                    onClick={() => setPage((p) => p + 1)}
+                    className="px-4 py-2 bg-white/10 rounded-lg disabled:opacity-40"
+                  >
+                    Next →
+                  </button>
+                </div>
               </div>
             )}
           </section>
@@ -206,9 +215,7 @@ const StablecoinDashboard = () => {
 
         {/* SIDEBAR */}
         <aside className="hidden lg:flex flex-col gap-4">
-          <h3 className="text-xl font-semibold mb-2">
-            Insights
-          </h3>
+          <h3 className="text-xl font-semibold mb-2">Insights</h3>
 
           {articles.map((article) => (
             <div
@@ -222,24 +229,17 @@ const StablecoinDashboard = () => {
                 <span className="text-xs text-cyan-300 font-semibold">
                   {article.category}
                 </span>
-                <p className="text-sm font-semibold mt-2">
-                  {article.title}
-                </p>
-                <p className="text-xs text-white/60 mt-2">
-                  {article.excerpt}
-                </p>
+                <p className="text-sm font-semibold mt-2">{article.title}</p>
+                <p className="text-xs text-white/60 mt-2">{article.excerpt}</p>
               </div>
             </div>
           ))}
         </aside>
       </div>
 
-      {/* Modal rendered outside blurred area */}
+      {/* Modal */}
       {selectedTx && (
-        <TransactionDetailsModal
-          tx={selectedTx}
-          onClose={() => setSelectedTx(null)}
-        />
+        <TransactionDetailsModal tx={selectedTx} onClose={() => setSelectedTx(null)} />
       )}
     </div>
   );
