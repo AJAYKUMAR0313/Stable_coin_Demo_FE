@@ -8,6 +8,7 @@ import TransferPage from "./features/transfer/pages/TransferPage";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import TransactionHistory from "./features/transactions/TransactionHistory";
 import OfframpPage from "./features/offramp/pages/OfframpPage";
+import DashboardDemo from "./pages/DashboardDemo";
 
 
 export default function App() {
@@ -18,7 +19,8 @@ export default function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/buy" element={<FiatOnRamp />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<Dashboard />} />
+          {/* <Route index element={<Dashboard />} /> */}
+          <Route index element={<DashboardDemo />} />
           <Route path="/dashboard/buy" element={<FiatOnRamp />} />
           <Route path="/dashboard/transfer" element={<TransferPage />} />
           <Route path="/dashboard/transactions" element={<TransactionHistory />} />

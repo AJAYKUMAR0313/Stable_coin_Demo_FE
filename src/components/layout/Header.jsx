@@ -12,10 +12,10 @@ export default function Header({ user }) {
         setOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  });
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const logout = () => {
     localStorage.clear();
@@ -32,52 +32,78 @@ export default function Header({ user }) {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b">
-      <div className="px-6 py-4 flex justify-between items-center">
-        <button
-          onClick={() => navigate("/dashboard")}
-          className=" px-4 py-2 rounded-lg "
-        >
-          <h1 className="text-3xl font-extrabold text-gray-800">Demo Stable</h1>
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#071D3A]/70 border-b border-white/10">
+      <div className="px-8 py-2 flex justify-between items-center">
+
+        {/* LOGO */}
+        <button onClick={() => navigate("/dashboard")} className="group">
+          <h1 className="text-2xl font-extrabold bg-gradient-to-r from-cyan-300 to-blue-400 bg-clip-text text-transparent">
+            StableBank
+          </h1>
+          <span className="block h-0.5 w-0 group-hover:w-full bg-cyan-400 transition-all" />
         </button>
 
-        {/* Email + Dropdown */}
+        {/* USER PILL */}
         <div className="relative" ref={dropdownRef}>
           <div
             onClick={() => setOpen(!open)}
-            className="px-4 py-2 rounded-lg cursor-pointer"
+            className="flex items-center gap-3 px-4 py-2
+            rounded-full cursor-pointer
+            bg-white/10 backdrop-blur-md
+            border border-white/15
+            hover:bg-white/20 transition"
           >
-            <p className="text-sm font-medium text-gray-700">{user.email}</p>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-sm font-bold text-[#071D3A]">
+              {user.email?.[0]?.toUpperCase()}
+            </div>
+
+            <div className="text-left">
+              <p className="text-sm font-medium text-white">
+                {user.email}
+              </p>
+              <p className="text-xs text-white/60">
+                {shortedAddress(user.wallet_address)}
+              </p>
+            </div>
           </div>
 
-          {/* Dropdown menu */}
+          {/* DROPDOWN */}
           {open && (
-            <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border z-50">
-              {/* Address Row */}
-              <div className="flex items-center justify-between px-4 py-3 hover:bg-gray-50">
-                <div className="text-xs text-gray-500 break-all">
-                  {shortedAddress(user.wallet_address)}
+            <div
+              className="absolute right-0 mt-3 w-64
+              bg-[#0B2A5B]/90 backdrop-blur-xl
+              border border-white/15
+              rounded-2xl shadow-2xl overflow-hidden"
+            >
+              {/* WALLET */}
+              <div className="px-4 py-3 flex items-center justify-between hover:bg-white/10 transition">
+                <div>
+                  <p className="text-xs text-white/60">Wallet Address</p>
+                  <p className="text-sm text-white font-mono">
+                    {shortedAddress(user.wallet_address, 6, 6)}
+                  </p>
                 </div>
 
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     copyAddress();
-                    setOpen(false);
                   }}
-                  className="ml-2 p-1 rounded hover:bg-gray-200"
+                  className="p-2 rounded-lg hover:bg-white/20 transition"
                   title="Copy address"
                 >
                   📋
                 </button>
               </div>
 
-              <div className="border-t" />
+              <div className="border-t border-white/10" />
 
-              {/* Logout */}
+              {/* LOGOUT */}
               <button
                 onClick={logout}
-                className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-xl"
+                className="w-full text-left px-4 py-3
+                text-sm font-semibold text-red-400
+                hover:bg-red-500/10 transition"
               >
                 Logout
               </button>
