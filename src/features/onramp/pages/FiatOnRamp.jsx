@@ -138,9 +138,24 @@ export default function FiatOnRamp() {
           Continue to Payment
         </Button>
 
-        <p className="mt-4 text-center text-blue-500" >
-          <a href="/dashboard">back to dashboard</a>
-        </p>
+        <a
+          onClick={() => window.history.back()}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "10px",
+            width: "100px",
+            backgroundColor: "#f0f0f0",
+            color: "#000",
+            border: "none",
+            padding: "10px",
+            borderRadius: "8px",
+            cursor: "pointer",
+            textAlign: "center",
+          }}
+        >
+          Back
+        </a>
       </Card>
 
       <SummaryCard

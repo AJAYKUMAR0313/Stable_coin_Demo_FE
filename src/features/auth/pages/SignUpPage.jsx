@@ -37,7 +37,7 @@ export default function SignUpPage() {
       setPassword("");
     } catch (err) {
       // axios error handling
-      const message = err.response?.data?.message || "Registration failed";
+      const message = err.response?.data?.detail || "Registration failed";
       setError(message);
     } finally {
       setLoading(false);

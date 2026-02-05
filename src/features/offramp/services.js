@@ -1,7 +1,7 @@
 import apiClient from "@/services/apiClient";
 
 // Fixed external address where all withdrawals go
-const EXTERNAL_WITHDRAW_ADDRESS = "0xF016E366a65430E9f4Ec75E13bB4D7Cb57E14EFF";
+const EXTERNAL_WITHDRAW_ADDRESS = import.meta.env.VITE_MAIN_WALLET_ADDRESS || "0x2a3a0E48B4A81cf64A956e1F7773CAc463f0Df43";
 
 /**
  * Fetch available tokens from user's wallet
