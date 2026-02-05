@@ -119,7 +119,7 @@ export default function FiatOnRamp() {
   <div className="min-h-screen text-white
     bg-gradient-to-br from-[#071D3A] via-[#0B2A5B] to-[#0666E4]">
 
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="max-w-6xl mx-auto p-4">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* LEFT – TOKEN SELECTION */}
@@ -127,11 +127,11 @@ export default function FiatOnRamp() {
           <div className="bg-white/10 backdrop-blur-xl
             border border-white/15 rounded-2xl shadow-2xl p-6">
 
-            <h1 className="text-3xl font-bold mb-6">
+            <h1 className="text-2xl font-bold mb-4">
               Buy Stablecoins
             </h1>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {stablecoins.map((token) => (
                 <StablecoinCard
                   key={token.symbol}
@@ -156,7 +156,7 @@ export default function FiatOnRamp() {
 
         {/* RIGHT – SUMMARY */}
         <div className="lg:col-span-1">
-          <div className="sticky top-24">
+          <div className="sticky top-1">
             <PurchaseSummaryPanel onContinue={handleContinue} />
           </div>
         </div>

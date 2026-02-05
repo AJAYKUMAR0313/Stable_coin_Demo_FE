@@ -17,11 +17,18 @@ export async function fetchSupportedStablecoins() {
       rateInr: 83.45,
     },
     {
+        symbol: "JPM",
+        name: "JPM Coin",
+        decimals: 6,
+        rateInr: 92.55,
+    },
+    {
       symbol: "DAI",
       name: "Dai Stablecoin",
       decimals: 18,
       rateInr: 83.40,
     },
+
     {
       symbol: "ETH",
       name: "Ethereum",
