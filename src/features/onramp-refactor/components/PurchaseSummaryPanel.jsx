@@ -30,7 +30,7 @@ export default function PurchaseSummaryPanel({ onContinue }) {
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 sticky top-6">
       {/* Available Balance */}
-      <div className="mb-6">
+      <div className="mb-3">
         <div className="text-sm text-gray-600 mb-1">Available Balance</div>
         <div className="text-2xl font-bold text-gray-900">
           ₹{availableBalance.toLocaleString('en-IN', { maximumFractionDigits: 2 })}
@@ -38,32 +38,35 @@ export default function PurchaseSummaryPanel({ onContinue }) {
       </div>
 
       {/* Buy Amount Input */}
-      <div className="mb-4">
+      <div className="mb-3">
         <label className="text-sm font-medium text-gray-700 mb-2 block">
           Buy Amount
         </label>
         <div className="relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-lg">
-            
-          </span>
+          {/* <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-lg">
+            U
+          </span> */}
           <input
-            type="number"
-            value={tokenAmount}
-            onChange={(e) => setTokenAmount(e.target.value)}
-            placeholder="0.00"
-            min="0"
-            step="0.01"
-            disabled={!selectedToken}
-            className={`
-              w-full pl-8 pr-4 py-3 text-lg font-semibold rounded-xl
-              border-2 outline-none transition-all
-              disabled:bg-gray-50 disabled:cursor-not-allowed
-              ${isInsufficientBalance 
-                ? 'border-red-500 bg-red-50' 
-                : 'border-gray-300 focus:border-blue-500'
-              }
-            `}
-          />
+  type="text"
+  inputMode="decimal"
+  value={tokenAmount ?? ""}
+  onChange={(e) => {
+    const value = e.target.value;
+    if (/^\d*\.?\d*$/.test(value)) {
+      setTokenAmount(value);
+    }
+  }}
+  className={`
+    w-full pl-12 pr-14 py-3
+    text-lg font-semibold
+    text-gray-900       /* 👈 FORCE TEXT COLOR */
+    caret-gray-900     /* 👈 FORCE CURSOR COLOR */
+    bg-white
+    rounded-xl border-2 outline-none
+    disabled:bg-gray-50 disabled:cursor-not-allowed
+  `}
+/>
+
           {selectedToken && (
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
               {selectedToken.symbol}
