@@ -8,6 +8,10 @@ import TransferPage from "./features/transfer/pages/TransferPage";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import TransactionHistory from "./features/transactions/TransactionHistory";
 import OfframpPage from "./features/offramp/pages/OfframpPage";
+
+import DashboardDemo from "./pages/DashboardDemo";
+import StablecoinDashboard from "./features/stablecoinDashboard/stablecoinDashboard";
+
 // In your router
 import FiatOnRampNew from './features/onramp-refactor/pages/FiatOnRamp';
 
@@ -21,11 +25,13 @@ export default function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/buy" element={<FiatOnRamp />} />
         <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<Dashboard />} />
+          {/* <Route index element={<Dashboard />} /> */}
+          <Route index element={<DashboardDemo />} />
           <Route path="/dashboard/buy" element={<FiatOnRamp />} />
           <Route path="/dashboard/transfer" element={<TransferPage />} />
           <Route path="/dashboard/transactions" element={<TransactionHistory />} />
           <Route path="/dashboard/offramp" element={<OfframpPage />} />
+          <Route path="/dashboard/stablecoin" element={<StablecoinDashboard/>} />
           <Route path="/dashboard/buy-stable" element={<FiatOnRampNew />} />
 
         </Route>
