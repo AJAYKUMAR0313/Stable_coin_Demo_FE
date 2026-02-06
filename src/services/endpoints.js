@@ -14,11 +14,11 @@ export const ENDPOINTS = {
   // ---------- Stablecoin Catalog ----------
   STABLECOINS: "/api/stablecoins",
 
-  USER_BALANCE: (address) => `/wallet/balance/${address}`,
+  USER_BALANCE: (customerId) => `/wallet/fiat_balance/${customerId}`,
 
   // ---------- On-Ramp (Payment-based) ----------
   // BUY_STABLECOINS: (address) =>`/wallet/free-tokens/${address}`,
-  BUY_STABLECOINS: `/wallet/free-tokens/address`,
+  BUY_STABLECOINS: `/wallet/free-tokens`,
 
   // ---------- Transactions ----------
   TRANSACTIONS: "/api/transactions",
