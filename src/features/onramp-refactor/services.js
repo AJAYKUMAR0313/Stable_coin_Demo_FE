@@ -27,22 +27,23 @@ export async function fetchSupportedStablecoins() {
       name: "Dai Stablecoin",
       decimals: 18,
       rateInr: 83.40,
-    },
-
-    {
-      symbol: "ETH",
-      name: "Ethereum",
-      decimals: 18,
-      rateInr: 83.35,
     }
   ];
 }
 
 export async function fetchUserBalance() {
   // Mock API call - replace with real endpoint
-  // const res = await apiClient.get(ENDPOINTS.USER_BALANCE);
+  // const res = await apiClient.get(ENDPOINTS.USER_BALANCE(localStorage.getItem("customer_Id")));
   // return res.data;
+  // return {
+  //   balance: res.data.fiat_bank_balance ,
+  //   account:{
+  //     number: res.data.bank_account_number,
+  //     type: "Savings Account"
+  //   }, // Assuming balance is in cents
+  // }
   
+  // {  "bank_account_number": "45892000123456",  "fiat_bank_balance": 170000000 }
   // Demo data
   return {
     balance: 45230.00,
