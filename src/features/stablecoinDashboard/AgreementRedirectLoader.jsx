@@ -11,7 +11,7 @@ export default function AgreementRedirectLoader() {
   useEffect(() => {
     const checkAgreement = async () => {
       try {
-        // const res = await axios.get("/api/check-agreement-status");
+        // const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/check-agreement-status`);
         const val = true; // simulate backend response
         const res = { data: val };
 

@@ -11,19 +11,24 @@ const StablecoinDashboard = () => {
   const [selectedTx, setSelectedTx] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  /* Pagination */
   const [page, setPage] = useState(1);
-  const limit = 1;
+  const limit = 5;
+
+  /* Wallet balances */
+  const [fiatBalance, setFiatBalance] = useState(0);
+  const [totalStableValue, setTotalStableValue] = useState(0);
+
+  const [stablecoins, setStablecoins] = useState([
+    { name: "USDC", balance: 0, change: "", icon: "🔵" },
+    { name: "USDT", balance: 0, change: "", icon: "🟢" },
+    { name: "JPM", balance: 0, change: "", icon: "🔷" },
+  ]);
 
   /* Prevent scroll when modal open */
   useEffect(() => {
     document.body.style.overflow = selectedTx ? "hidden" : "auto";
   }, [selectedTx]);
-
-  const stablecoins = [
-    { name: "USDC", balance: 1352, change: "+2.5%", icon: "🔵" },
-    { name: "USDT", balance: 123, change: "+1.2%", icon: "🟢" },
-    { name: "JPM", balance: 11, change: "+0.8%", icon: "🔷" },
-  ];
 
   const articles = [
     {
@@ -42,7 +47,7 @@ const StablecoinDashboard = () => {
     },
   ];
 
-  /* Transactions API */
+  /* ================= TRANSACTIONS ================= */
   const fetchTransactions = async () => {
     try {
       setLoading(true);
@@ -50,24 +55,64 @@ const StablecoinDashboard = () => {
       const wallet = localStorage.getItem("wallet_address");
       const offset = (page - 1) * limit;
 
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
+
       const response = await axios.get(
-        `http://localhost:8000/transactions/transactions/${wallet}`,
-        {
-          params: { wallet_address: wallet, limit, offset },
-        }
+        `${apiUrl}transactions/transactions/${wallet}`,
+        { params: { limit, offset } }
       );
 
       setTransactions(response?.data || []);
     } catch (error) {
-      console.error("Error fetching transactions:", error);
+      console.error("Transaction fetch error:", error);
     } finally {
       setLoading(false);
     }
   };
 
+  /* ================= WALLET BALANCE ================= */
+  const fetchWalletBalance = async () => {
+    try {
+      const wallet = localStorage.getItem("wallet_address");
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
+      const res = await axios.get(
+        `${apiUrl}wallet/bal/${wallet}`
+      );
+
+      const data = res.data;
+
+      setFiatBalance(data.totalFiat || 0);
+      setTotalStableValue(data.totalStablecoinValue || 0);
+
+      /* Map backend stablecoins to UI */
+      setStablecoins((prev) =>
+        prev.map((coin) => {
+          const backendCoin = data.stablecoins?.find(
+            (c) => c.symbol === coin.name
+          );
+
+          return {
+            ...coin,
+            balance: backendCoin
+              ? Number(backendCoin.balance).toFixed(2)
+              : 0,
+          };
+        })
+      );
+    } catch (err) {
+      console.error("Wallet balance error:", err);
+    }
+  };
+
+  /* Transactions pagination */
   useEffect(() => {
     fetchTransactions();
   }, [page]);
+
+  /* Wallet balance once */
+  useEffect(() => {
+    fetchWalletBalance();
+  }, []);
 
   return (
     <div className="min-h-screen text-white bg-gradient-to-br from-[#071D3A] via-[#0B2A5B] to-[#0666E4] text-sm">
@@ -76,14 +121,18 @@ const StablecoinDashboard = () => {
           selectedTx ? "blur-sm pointer-events-none" : ""
         }`}
       >
-        {/* MAIN CONTENT */}
+        {/* MAIN */}
         <main className="lg:col-span-3 flex flex-col gap-6">
 
-          {/* BALANCE */}
+          {/* BALANCES */}
           <div className="grid md:grid-cols-2 gap-4">
             {[
-              { label: "Fiat Balance", value: "₹32,451", icon: "💵" },
-              { label: "Stablecoins", value: "$1,486", icon: "🪙" },
+              { label: "Fiat Balance", value: `₹${fiatBalance}`, icon: "💵" },
+              {
+                label: "Stablecoins",
+                value: `$${totalStableValue}`,
+                icon: "🪙",
+              },
             ].map((item, i) => (
               <div
                 key={i}
@@ -116,12 +165,7 @@ const StablecoinDashboard = () => {
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-2xl">{coin.icon}</span>
-                    <div>
-                      <p className="font-medium text-sm">{coin.name}</p>
-                      <p className="text-xs text-green-400">
-                        {coin.change}
-                      </p>
-                    </div>
+                    <p className="font-medium text-sm">{coin.name}</p>
                   </div>
                   <p className="text-lg font-semibold">
                     ${coin.balance}
@@ -209,7 +253,7 @@ const StablecoinDashboard = () => {
                 ))}
 
                 {/* PAGINATION */}
-                <div className="flex justify-between items-center mt-3">
+                <div className="flex justify-between mt-3">
                   <button
                     disabled={page === 1}
                     onClick={() => setPage((p) => Math.max(p - 1, 1))}
