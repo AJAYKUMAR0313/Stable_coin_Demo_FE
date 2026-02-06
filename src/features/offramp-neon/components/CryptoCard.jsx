@@ -21,7 +21,7 @@ export default function CryptoCard() {
 
   return (
     <div 
-      className="relative p-6 rounded-3xl animate-breathe"
+      className="relative p-6 rounded-3xl animate-breathe min-h-[215px]"
       style={{
         background: 'rgba(20, 30, 60, 0.4)',
         backdropFilter: 'blur(20px)',
@@ -56,7 +56,7 @@ export default function CryptoCard() {
         <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-3">
           {selectedToken && (
             <button
-              onClick={setMaxAmount}
+              onClick={setMaxAmount} 
               className="text-xs font-semibold text-pink-500 hover:text-pink-400 transition-colors"
             >
               MAX

@@ -176,7 +176,7 @@ export const useOfframpStore = create((set, get) => ({
     const { amount, selectedToken } = get();
     if (!amount || !selectedToken) return false;
     const numAmount = Number(amount);
-    return numAmount > 0 && numAmount >= 10 && numAmount <= selectedToken.balance;
+    return numAmount > 0 && numAmount >= 0 && numAmount <= selectedToken.balance;
   },
 
   canSlide: () => {
