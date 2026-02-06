@@ -1,4 +1,5 @@
 import apiClient from "@/services/apiClient";
+import { ENDPOINTS } from "@/services/endpoints";
 
 const EXTERNAL_WITHDRAW_ADDRESS = import.meta.env.VITE_MAIN_WALLET_ADDRESS || "0x2a3a0E48B4A81cf64A956e1F7773CAc463f0Df43";
 
@@ -11,6 +12,8 @@ export async function fetchAvailableTokens() {
     
     const response = await apiClient.get(`/wallet/balance/${userAddress}`);
     const balanceData = response.data;
+
+    console.log("Fetched wallet balances:", balanceData);
     
     const tokens = [];
     
@@ -78,12 +81,26 @@ export async function fetchConversionRates() {
  */
 export async function fetchConnectedBankAccount() {
   // Mock - In real app, this comes from bank app context
-  return {
-    number: "****4738",
-    type: "Savings Account",
-    fullNumber: "1234567890124738"
-  };
+  const res = await apiClient.get(ENDPOINTS.USER_BALANCE(localStorage.getItem("customerId")));
+    // return res.data;
+    return {
+      number: "****" + res.data.bank_account_number.slice(-4),
+      type: "Savings Account",
+      fullNumber: res.data.bank_account_number
+    }
 }
+      // account:{
+      //   number: res.data.bank_account_number,
+      //   type: "Savings Account"
+      // }, // Assuming balance is in cents
+    // }
+    // 
+  // return {
+  //   number: "****4738",
+  //   type: "Savings Account",
+  //   fullNumber: "1234567890124738"
+  // };
+// }
 
 /**
  * Execute withdrawal request
@@ -103,10 +120,10 @@ export async function executeWithdrawalRequest({ token, amount, bankAccount, pin
     const transactionHash = response.data.tx_hash;
 
     return {
-      success: true,
+      success: response.data.success,
       transactionHash: transactionHash,
-      estimatedDays: 2,
-      bankAccount: bankAccount
+      // estimatedDays: 2,
+      // bankAccount: bankAccount
     };
   } catch (error) {
     console.error("Withdrawal request failed:", error);
