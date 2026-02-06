@@ -25,9 +25,9 @@ export default function OfframpNeonPage() {
   }, []);
 
   const handleNewWithdrawal = () => resetWithdrawal();
-  const handleGoToDashboard = () => window.location.href = "/dashboard";
+  const handleGoToDashboard = () => window.location.href = "/dashboard/stablecoin";
   const handleTryAgain = () => resetWithdrawal();
-  const handleCancel = () => window.location.href = "/dashboard";
+  const handleCancel = () => window.location.href = "/dashboard/stablecoin";
   // 1. Add a ref and state for mouse position
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -54,7 +54,7 @@ export default function OfframpNeonPage() {
             
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold text-white mb-2">Sell Tokens</h1>
-              <p className="text-gray-400">Convert crypto to INR instantly</p>
+              <p className="text-gray-400">Convert stablecoin to INR instantly</p>
             </div>
 
             {/* GRID SYSTEM FOR PERFECT SYMMETRY 
