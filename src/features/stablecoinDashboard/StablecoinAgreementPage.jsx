@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-/* ==============================
+
+/* ======================================================
    STABLECOIN AGREEMENT MODAL
-   ============================== */
+   ====================================================== */
 
 export function StablecoinAgreementModal({ open, onClose }) {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const [checks, setChecks] = useState({
     terms: false,
     risks: false,
@@ -19,6 +23,7 @@ export function StablecoinAgreementModal({ open, onClose }) {
     if (!open) return;
 
     const esc = (e) => e.key === "Escape" && onClose();
+
     document.body.style.overflow = "hidden";
     document.addEventListener("keydown", esc);
 
@@ -34,9 +39,33 @@ export function StablecoinAgreementModal({ open, onClose }) {
     setChecks({ ...checks, [e.target.name]: e.target.checked });
   };
 
-  const handleConfirm = () => {
-    alert("Agreement accepted (demo wallet creation)");
-    onClose();
+  const handleConfirm = async () => {
+    try {
+      setLoading(true);
+
+      const apiUrl =
+        import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
+
+      const customerId = localStorage.getItem("customerId");
+
+      const res = await axios.post(
+        `${apiUrl}auth/create_wallet/${customerId}`
+      );
+
+      if (res?.status >= 200 && res?.status < 300) {
+        localStorage.setItem("wallet_address", res?.data?.wallet_address);
+
+        onClose();
+
+        // full refresh so dashboard fetches new wallet
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error("Wallet creation error:", err);
+      alert("Failed to create wallet. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -49,9 +78,7 @@ export function StablecoinAgreementModal({ open, onClose }) {
         className="w-full max-w-2xl rounded-2xl p-8 text-white border border-white/10 shadow-2xl bg-gradient-to-br from-[#071D3A] via-[#0B2A5B] to-[#0666E4]"
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">
-            Stablecoin User Agreement
-          </h2>
+          <h2 className="text-xl font-semibold">Stablecoin User Agreement</h2>
 
           <button
             onClick={onClose}
@@ -70,15 +97,11 @@ export function StablecoinAgreementModal({ open, onClose }) {
           <p className="mb-2">
             Demo stablecoins simulate assets like USDC/USDT/DAI.
           </p>
-          <p className="mb-2">
-            Tokens shown have no real monetary value.
-          </p>
+          <p className="mb-2">Tokens shown have no real monetary value.</p>
           <p className="mb-2">
             Simulated blockchain fees and confirmations may appear.
           </p>
-          <p>
-            Intended strictly for testing, education, and UI demos.
-          </p>
+          <p>Intended strictly for testing, education, and UI demos.</p>
         </div>
 
         <div className="space-y-3 mb-6 text-xs">
@@ -115,14 +138,14 @@ export function StablecoinAgreementModal({ open, onClose }) {
 
         <div className="flex gap-3">
           <button
-            onClick={onClose}
+            onClick={() => navigate("/dashboard", { replace: true })}
             className="flex-1 py-3 rounded-lg border border-white/20 hover:bg-white/10 transition"
           >
             Cancel
           </button>
 
           <button
-            disabled={!allChecked}
+            disabled={!allChecked || loading}
             onClick={handleConfirm}
             className={`flex-1 py-3 rounded-lg font-medium transition ${
               allChecked
@@ -130,7 +153,7 @@ export function StablecoinAgreementModal({ open, onClose }) {
                 : "bg-[#d93069]/50 cursor-not-allowed"
             }`}
           >
-            Confirm & Create Wallet
+            {loading ? "Creating Wallet..." : "Confirm & Create Wallet"}
           </button>
         </div>
 
@@ -142,10 +165,9 @@ export function StablecoinAgreementModal({ open, onClose }) {
   );
 }
 
-/* ==============================
-   AGREEMENT PAGE WRAPPER
-   (Route: /dashboard/stablecoin/check-agreement)
-   ============================== */
+/* ======================================================
+   AGREEMENT PAGE WRAPPER (ROUTE PAGE)
+   ====================================================== */
 
 export function StablecoinAgreementPage() {
   const navigate = useNavigate();
@@ -153,7 +175,7 @@ export function StablecoinAgreementPage() {
   return (
     <StablecoinAgreementModal
       open={true}
-      onClose={() => navigate("/dashboard", { replace: true })}
+      onClose={() => navigate("/dashboard/stablecoin", { replace: true })}
     />
   );
 }
