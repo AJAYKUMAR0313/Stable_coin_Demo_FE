@@ -1,13 +1,12 @@
 import { useEffect } from "react";
 import { useTransferStore } from "../transferStore";
-import { Text } from "@/components/ui/Text";
 
 export default function TokenSelector() {
-  const { 
-    availableTokens, 
-    selectedToken, 
-    selectToken, 
-    loadAvailableTokens 
+  const {
+    availableTokens,
+    selectedToken,
+    selectToken,
+    loadAvailableTokens,
   } = useTransferStore();
 
   useEffect(() => {
@@ -15,81 +14,75 @@ export default function TokenSelector() {
   }, []);
 
   return (
-    <div style={{ marginBottom: "20px" }}>
-      <Text.Label style={{ marginBottom: "10px", display: "block", fontSize: "15px" }}>
+    <div className="flex flex-col gap-1">
+      {/* LABEL */}
+      <label className="text-sm text-white/70">
         Select Token
-      </Text.Label>
+      </label>
 
-      <div style={{ position: "relative" }}>
+      {/* SELECT */}
+      <div className="relative">
         <select
           value={selectedToken?.symbol || ""}
           onChange={(e) => {
-            const token = availableTokens.find(t => t.symbol === e.target.value);
-            selectToken(token);
+            const token = availableTokens.find(
+              (t) => t.symbol === e.target.value
+            );
+            selectToken(token || null);
           }}
-          style={{
-            width: "100%",
-            padding: "10px 40px 10px 10px",
-            fontSize: "15px",
-            border: "2px solid #e0e0e0",
-            borderRadius: "12px",
-            outline: "none",
-            cursor: "pointer",
-            appearance: "none",
-            background: "#fff",
-            transition: "border-color 0.2s",
-          }}
-          onFocus={(e) => e.target.style.borderColor = "#000"}
-          onBlur={(e) => e.target.style.borderColor = "#e0e0e0"}
+          className="
+            w-full px-3 py-2 pr-10 rounded-xl
+            bg-white/10 backdrop-blur-md
+            border border-white/15
+            text-sm text-white
+            focus:outline-none focus:ring-2 focus:ring-cyan-400/40
+            cursor-pointer appearance-none
+          "
         >
-          <option value="">Choose a token</option>
-          {availableTokens.map(token => (
-            <option key={token.symbol} value={token.symbol}>
-              {token.symbol} - {token.name} ({token.balance} available)
+          <option value="" className="bg-[#071D3A] text-white">
+            Choose a token
+          </option>
+
+          {availableTokens.map((token) => (
+            <option
+              key={token.symbol}
+              value={token.symbol}
+              className="bg-[#071D3A] text-white"
+            >
+              {token.symbol} — {token.name} ({token.balance})
             </option>
           ))}
         </select>
 
-        {/* Custom dropdown arrow */}
-        <div style={{
-          position: "absolute",
-          right: "16px",
-          top: "50%",
-          transform: "translateY(-50%)",
-          pointerEvents: "none",
-          fontSize: "12px",
-          color: "#666"
-        }}>
+        {/* DROPDOWN ICON */}
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-white/50 pointer-events-none">
           ▼
-        </div>
+        </span>
       </div>
 
-      {/* Selected Token Info */}
+      {/* SELECTED TOKEN INFO */}
       {selectedToken && (
-        <div style={{
-          marginTop: "12px",
-          padding: "12px 16px",
-          background: "#f8f9fa",
-          borderRadius: "8px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center"
-        }}>
+        <div
+          className="mt-2 px-3 py-2 rounded-xl
+          bg-white/10 border border-white/15
+          flex justify-between items-center"
+        >
           <div>
-            <div style={{ fontSize: "14px", fontWeight: 600, marginBottom: "2px" }}>
+            <p className="text-sm font-medium text-white">
               {selectedToken.name}
-            </div>
-            <div style={{ fontSize: "12px", color: "#666" }}>
+            </p>
+            <p className="text-xs text-white/50">
               {selectedToken.symbol}
-            </div>
+            </p>
           </div>
-          <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: "16px", fontWeight: 600 }}>
+
+          <div className="text-right">
+            <p className="text-sm font-semibold text-white">
               {selectedToken.balance}
-            </div>
-            <div style={{ fontSize: "12px", color: "#666" }}>
+            </p>
+            <p className="text-xs text-white/50">
               Available
-            </div>
+            </p>
           </div>
         </div>
       )}

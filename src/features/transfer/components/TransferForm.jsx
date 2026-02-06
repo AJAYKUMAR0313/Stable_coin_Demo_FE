@@ -1,152 +1,128 @@
 import { useState } from "react";
 import { useTransferStore } from "../transferStore";
-import Card from "@/components/ui/Card";
-import Button from "@/components/ui/Button";
-import { Text } from "@/components/ui/Text";
 import RecipientInput from "./RecipientInput";
 import TokenSelector from "./TokenSelector";
 import AmountInput from "./AmountInput";
 import BalanceDisplay from "./BalanceDisplay";
+import TransferModeSelector from "./TransferModeSelector";
+import PayeeSelector from "./PayeeSelector";
+import UserSearchInput from "./UserSearchInput";
 
 export default function TransferForm({ onContinue }) {
-  const { recipient, setRecipient, selectedToken, amount, note, setNote } =
-    useTransferStore();
+  const {
+    recipient,
+    setRecipient,
+    selectedToken,
+    amount,
+    note,
+    setNote,
+    transferMode,
+    isCheckingRecipient,
+  } = useTransferStore();
 
   const [recipientError, setRecipientError] = useState(null);
   const [amountError, setAmountError] = useState(null);
+  const [showNote, setShowNote] = useState(false);
 
   const isFormValid = () => {
-    return (
-      recipient &&
-      !recipientError &&
-      selectedToken &&
-      amount &&
-      Number(amount) > 0 &&
-      !amountError
-    );
-  };
+    if (!recipient) return false;
+    if (recipientError) return false;
+    if (isCheckingRecipient) return false;
 
-  const handleContinue = () => {
-    // Final validation before proceeding
-    if (isFormValid()) {
-      onContinue();
-    }
+    if (!selectedToken) return false;
+    if (!amount || Number(amount) <= 0) return false;
+    if (amountError) return false;
+
+    return true;
   };
 
   return (
-    <Card>
-      <Text.Title
-        style={{ marginTop: "0", marginBottom: "22px", fontSize: "24px" }}
-      >
-        Transfer Details
-      </Text.Title>
+    <div
+      className="bg-white/10 backdrop-blur-xl
+      border border-white/15
+      rounded-2xl max-w-lg w-full mx-auto
+      h-[70vh] flex flex-col"
+    >
+      {/* FORM CONTENT */}
+      <div className="flex-1 overflow-y-auto no-scrollbar px-4 pt-4 pb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* RECIPIENT */}
+          <div className="md:col-span-2">
+            <TransferModeSelector />
+          </div>
 
-      {/* Recipient Input */}
-      <RecipientInput
-        value={recipient}
-        onChange={setRecipient}
-        error={recipientError}
-        setError={setRecipientError}
-      />
+          <div className="md:col-span-2">
+            {transferMode === "WALLET" && (
+              <RecipientInput
+                value={recipient}
+                onChange={setRecipient}
+                error={recipientError}
+                setError={setRecipientError}
+              />
+            )}
 
-      {/* Token Selector */}
-      <TokenSelector />
+            {transferMode === "PAYEE" && <PayeeSelector />}
 
-      {/* Amount Input */}
-      <AmountInput error={amountError} setError={setAmountError} />
+            {transferMode === "SEARCH" && <UserSearchInput />}
+          </div>
 
-      {/* Balance Display */}
-      <BalanceDisplay />
+          {/* TOKEN */}
+          <TokenSelector />
 
-      {/* Optional Note */}
-      <div style={{ marginBottom: "32px" }}>
-        <Text.Label
-          style={{ marginBottom: "12px", display: "block", fontSize: "15px" }}
-        >
-          Note (Optional)
-        </Text.Label>
-        <textarea
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          placeholder="Add a note for this transfer..."
-          maxLength={200}
-          style={{
-            width: "100%",
-            padding: "14px",
-            fontSize: "15px",
-            border: "2px solid #e0e0e0",
-            borderRadius: "12px",
-            outline: "none",
-            resize: "vertical",
-            minHeight: "100px",
-            fontFamily: "inherit",
-            transition: "border-color 0.2s",
-          }}
-          onFocus={(e) => (e.target.style.borderColor = "#000")}
-          onBlur={(e) => (e.target.style.borderColor = "#e0e0e0")}
-        />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: "4px",
-          }}
-        >
-          <Text.Muted style={{ fontSize: "12px" }}>
-            {note.length}/200
-          </Text.Muted>
+          {/* AMOUNT */}
+          <AmountInput error={amountError} setError={setAmountError} />
+
+          {/* BALANCE */}
+          <div className="md:col-span-2">
+            <BalanceDisplay />
+          </div>
+
+          {/* NOTE TOGGLE */}
+          <div className="md:col-span-2">
+            <button
+              onClick={() => setShowNote(!showNote)}
+              className="text-xs text-cyan-300 hover:text-cyan-200 transition"
+            >
+              {showNote ? "− Remove note" : "+ Add a note"}
+            </button>
+          </div>
+
+          {/* NOTE */}
+          {showNote && (
+            <div className="md:col-span-2">
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Add a note (optional)"
+                maxLength={200}
+                className="w-full min-h-[60px] px-3 py-2 rounded-xl
+                bg-white/10 border border-white/15
+                text-sm text-white placeholder-white/50
+                focus:outline-none focus:ring-2 focus:ring-cyan-400
+                resize-none transition"
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Continue Button */}
-      <Button onClick={handleContinue} disabled={!isFormValid()}>
-        Continue to Review
-      </Button>
-
-      {/* Back Button */}
-      <a
-        onClick={() => window.history.back()}
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "10px",
-          width: "100px",
-          backgroundColor: "#f0f0f0",
-          color: "#000",
-          border: "none",
-          padding: "10px",
-          borderRadius: "8px",
-          cursor: "pointer",
-          textAlign: "center",
-        }}
-      >
-        Back
-      </a>
-
-      {/* Helper Text */}
-      {!isFormValid() && (
-        <Text.Muted
-          style={{ marginTop: "12px", textAlign: "center", fontSize: "13px" }}
-        >
-          {!recipient && "Enter recipient address"}
-          {recipient && recipientError && "Fix recipient address"}
-          {recipient &&
-            !recipientError &&
-            !selectedToken &&
-            " • Select a token"}
-          {recipient &&
-            !recipientError &&
-            selectedToken &&
-            !amount &&
-            " • Enter amount"}
-          {recipient &&
-            !recipientError &&
-            selectedToken &&
-            amount &&
-            amountError &&
-            " • Fix amount"}
-        </Text.Muted>
+      {/* CTA — PART OF THE SAME FORM */}
+      {isFormValid && (
+        <div className="px-4 pb-4 animate-slide-up">
+          <button
+            onClick={onContinue}
+            className="
+        w-full py-3 rounded-xl font-semibold
+        bg-gradient-to-r from-cyan-400 to-blue-600
+        text-black
+        hover:scale-[1.02]
+        transition
+      "
+          >
+            Continue
+          </button>
+        </div>
       )}
-    </Card>
+    </div>
   );
 }

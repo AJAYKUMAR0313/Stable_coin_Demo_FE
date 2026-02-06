@@ -1,219 +1,130 @@
 import { useTransferStore } from "../transferStore";
-import Card from "@/components/ui/Card";
-import Button from "@/components/ui/Button";
-import { Text } from "@/components/ui/Text";
 
 export default function TransferSummary({ onBack, onConfirm }) {
-  const { recipient, amount, selectedToken, note,transferStatus } = useTransferStore();
+  const { recipient, amount, selectedToken, note, transferStatus } =
+    useTransferStore();
 
   const shortAddress = `${recipient.slice(0, 6)}...${recipient.slice(-4)}`;
-  const remainingBalance = (selectedToken.balance - Number(amount)).toFixed(6);
+  const remainingBalance = (
+    selectedToken.balance - Number(amount)
+  ).toFixed(6);
 
   return (
-    <Card>
-      <Text.Title style={{ marginBottom: "32px", textAlign: "center", fontSize: "24px" }}>
+    <div
+      className="bg-white/10 backdrop-blur-xl
+      border border-black/15
+      rounded-2xl max-w-lg w-full mx-auto
+      p-4 flex flex-col gap-4"
+    >
+      {/* TITLE */}
+      <h2 className="text-lg font-semibold text-black text-center">
         Review Transfer
-      </Text.Title>
+      </h2>
 
-      <div style={{
-        background: "#f8f9fa",
-        borderRadius: "12px",
-        padding: "clamp(20px, 4vw, 28px)",
-        marginBottom: "32px"
-      }}>
-        {/* From/To Section */}
-        <div style={{ marginBottom: "20px" }}>
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "12px"
-          }}>
-            <Text.Muted>From</Text.Muted>
-            <Text.Body style={{ fontWeight: 600 }}>Your Wallet</Text.Body>
-          </div>
-
-          <div style={{
-            display: "flex",
-            justifyContent: "center",
-            margin: "12px 0"
-          }}>
-            <div style={{
-              width: "32px",
-              height: "32px",
-              borderRadius: "50%",
-              background: "#fff",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "16px"
-            }}>
-              ↓
-            </div>
-          </div>
-
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center"
-          }}>
-            <Text.Muted>To</Text.Muted>
-            <code style={{
-              fontSize: "14px",
-              fontFamily: "monospace",
-              padding: "4px 8px",
-              background: "#fff",
-              borderRadius: "6px",
-              fontWeight: 600
-            }}>
-              {shortAddress}
-            </code>
-          </div>
+      {/* FROM → TO */}
+      <div className="bg-white/10 rounded-xl p-3 flex flex-col gap-2">
+        <div className="flex justify-between text-sm text-white/70">
+          <span>From</span>
+          <span className="font-medium text-white">Your Wallet</span>
         </div>
 
-        {/* Divider */}
-        <div style={{
-          borderTop: "1px solid #e0e0e0",
-          margin: "16px 0"
-        }} />
+        <div className="flex justify-center text-white/40">↓</div>
 
-        {/* Amount Details */}
-        <div style={{ marginBottom: "16px" }}>
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "12px"
-          }}>
-            <Text.Muted>Token</Text.Muted>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: "14px", fontWeight: 600 }}>
-                {selectedToken.name}
-              </div>
-              <div style={{ fontSize: "12px", color: "#666" }}>
-                {selectedToken.symbol}
-              </div>
-            </div>
-          </div>
-
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "12px"
-          }}>
-            <Text.Muted>Amount</Text.Muted>
-            <Text.Body style={{ fontWeight: 700, fontSize: "18px" }}>
-              {amount} {selectedToken.symbol}
-            </Text.Body>
-          </div>
-
-          {note && (
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginBottom: "12px",
-              alignItems: "flex-start"
-            }}>
-              <Text.Muted>Note</Text.Muted>
-              <div style={{
-                maxWidth: "60%",
-                fontSize: "13px",
-                textAlign: "right",
-                fontStyle: "italic",
-                color: "#666"
-              }}>
-                "{note}"
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Divider */}
-        <div style={{
-          borderTop: "2px solid #e0e0e0",
-          margin: "16px 0"
-        }} />
-
-        {/* Balance Summary */}
-        <div>
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "8px"
-          }}>
-            <Text.Muted>Current Balance</Text.Muted>
-            <Text.Body style={{ fontWeight: 600 }}>
-              {selectedToken.balance} {selectedToken.symbol}
-            </Text.Body>
-          </div>
-
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            paddingTop: "8px",
-            borderTop: "1px solid #e0e0e0"
-          }}>
-            <Text.Body style={{ fontWeight: 600 }}>After Transfer</Text.Body>
-            <div style={{ textAlign: "right" }}>
-              <div style={{ 
-                fontSize: "18px", 
-                fontWeight: 700,
-                color: "#22c55e"
-              }}>
-                {remainingBalance} {selectedToken.symbol}
-              </div>
-            </div>
-          </div>
+        <div className="flex justify-between items-center text-sm">
+          <span className="text-/70">To</span>
+          <code className="px-2 py-1 rounded-md text-xs bg-black/30 text-cyan-300">
+            {shortAddress}
+          </code>
         </div>
       </div>
 
-      {/* Warning Message */}
-      <div style={{
-        padding: "12px",
-        background: "#fff3cd",
-        border: "1px solid #ffc107",
-        borderRadius: "8px",
-        marginBottom: "24px"
-      }}>
-        <Text.Body style={{ fontSize: "13px", color: "#856404" }}>
-          ⚠️ Please verify the recipient address carefully. Transfers cannot be reversed.
-        </Text.Body>
+      {/* TOKEN + AMOUNT */}
+      <div className="bg-white/10 rounded-xl p-3 flex flex-col gap-2">
+        <div className="flex justify-between text-sm">
+          <span className="text-white/70">Token</span>
+          <span className="font-medium text-white">
+            {selectedToken.name} ({selectedToken.symbol})
+          </span>
+        </div>
+
+        <div className="flex justify-between text-sm">
+          <span className="text-white/70">Amount</span>
+          <span className="font-semibold text-red-400">
+            {amount} {selectedToken.symbol}
+          </span>
+        </div>
+
+        {note && (
+          <div className="flex justify-between text-xs">
+            <span className="text-white/60">Note</span>
+            <span className="italic text-white/70 max-w-[60%] text-right">
+              “{note}”
+            </span>
+          </div>
+        )}
       </div>
-      {/* Full Address Display */}
-      <div style={{
-        marginTop: "16px",
-        padding: "12px",
-        background: "#f8f9fa",
-        borderRadius: "8px"
-      }}>
-        <Text.Muted style={{ fontSize: "11px", marginBottom: "4px" }}>
-          Full Recipient Address:
-        </Text.Muted>
-        <code style={{
-          fontSize: "20px",
-          fontFamily: "monospace",
-          wordBreak: "break-all",
-          color: "#666"
-        }}>
+
+      {/* BALANCE */}
+      <div className="bg-white/10 rounded-xl p-3 flex flex-col gap-2">
+        <div className="flex justify-between text-sm">
+          <span className="text-white/70">Current Balance</span>
+          <span className="text-white font-medium">
+            {selectedToken.balance} {selectedToken.symbol}
+          </span>
+        </div>
+
+        <div className="flex justify-between text-sm border-t border-white/10 pt-2">
+          <span className="font-medium text-white">After Transfer</span>
+          <span className="font-semibold text-green-400">
+            {remainingBalance} {selectedToken.symbol}
+          </span>
+        </div>
+      </div>
+
+      {/* WARNING */}
+      <div
+        className="text-xs text-yellow-300
+        bg-yellow-500/10 border border-yellow-500/30
+        rounded-lg p-2"
+      >
+        ⚠️ Transfers cannot be reversed. Verify the address carefully.
+      </div>
+
+      {/* FULL ADDRESS */}
+      <div className="bg-white/10 rounded-xl p-2">
+        <p className="text-[10px] text-white/50 mb-1">
+          Full Recipient Address
+        </p>
+        <code className="text-xs font-bold text-white/70 break-all">
           {recipient}
-
-      {/* Action Buttons */}
-      <div style={{ display: "flex", gap: "12px" }}>
-        <Button
-          onClick={onBack}
-          style={{
-            background: "#fff",
-            color: "#000",
-            border: "2px solid #e0e0e0"
-          }}
-        >
-          ← Back
-        </Button>
-        <Button onClick={onConfirm} disabled={transferStatus === "PROCESSING"}>
-        {transferStatus === "PROCESSING" ? "Sending..." : "Confirm Transfer"}
-        </Button>
-      </div>
         </code>
       </div>
-    </Card>
+
+      {/* ACTIONS */}
+      <div className="flex gap-3 pt-2">
+        <button
+          onClick={onBack}
+          className="flex-1 py-2 rounded-xl
+          bg-white/10 border border-white/15
+          text-sm text-white/80 hover:bg-white/20 transition"
+        >
+          Back
+        </button>
+
+        <button
+          onClick={onConfirm}
+          disabled={transferStatus === "PROCESSING"}
+          className={`flex-1 py-2 rounded-xl font-semibold transition
+            ${
+              transferStatus === "PROCESSING"
+                ? "bg-white/10 text-white/40 cursor-not-allowed"
+                : "bg-gradient-to-r from-cyan-400 to-blue-600 text-black hover:scale-[1.02]"
+            }
+          `}
+        >
+          {transferStatus === "PROCESSING" ? "Sending..." : "Confirm"}
+        </button>
+      </div>
+    </div>
   );
 }
