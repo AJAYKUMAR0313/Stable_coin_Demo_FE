@@ -81,7 +81,7 @@ export function StablecoinAgreementModal({ open, onClose }) {
           <h2 className="text-xl font-semibold">Stablecoin User Agreement</h2>
 
           <button
-            onClick={onClose}
+            onClick={() => navigate("/dashboard", { replace: true })}
             className="text-white/60 hover:text-white text-xl"
           >
             ✕
