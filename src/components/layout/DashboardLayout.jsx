@@ -34,7 +34,7 @@ export default function DashboardLayout() {
       <Header user={user} />
       <NavButtons />
       {/* Scrollable content area */}
-      <main className="flex-1 overflow-y-auto p-2">
+      <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>
     </div>

@@ -39,8 +39,10 @@ export default function App() {
           <Route path="/dashboard/stablecoin/agreement" element={<AgreementRedirectLoader />} />
           <Route path="/dashboard/stablecoin/check-agreement" element={<StablecoinAgreementPage />} />
           <Route path="/dashboard/stablecoin/buy-stable" element={<FiatOnRampNew />} />
-          <Route path="/dashboard/stablecoin/transfer-stable" element={<TransferRefactor />} />
+
+          {/* <Route path="/dashboard/stablecoin/transfer-stable" element={<TransferRefactor />} /> */}
           <Route path="/dashboard/stablecoin/convert" element={<FiatOffRampNew />} />
+
 
 
         </Route>
