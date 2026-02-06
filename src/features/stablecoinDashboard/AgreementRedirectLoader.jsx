@@ -11,11 +11,15 @@ export default function AgreementRedirectLoader() {
   useEffect(() => {
     const checkAgreement = async () => {
       try {
-        // const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/check-agreement-status`);
-        const val = true; // simulate backend response
-        const res = { data: val };
+        const customerId = localStorage.getItem("customerId");
+        
+        const api = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
+        const res = await axios.get(`${api}bank_details/is_wallet/${customerId}`);
+        // console.log("Agreement check response:", res);
+        // const val = true; // simulate backend response
+        // // const res = { data: val };
 
-        if (res?.data === true || res?.data?.status === true) {
+        if (res?.data?.is_wallet) {
           navigate("/dashboard/stablecoin", { replace: true });
         } else {
           navigate("/dashboard/stablecoin/check-agreement", {

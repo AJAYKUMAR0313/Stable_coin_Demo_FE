@@ -35,7 +35,17 @@ export function StablecoinAgreementModal({ open, onClose }) {
   };
 
   const handleConfirm = () => {
-    alert("Agreement accepted (demo wallet creation)");
+    const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
+    const customerId = localStorage.getItem("customerId");
+    const response = axios.post(`${apiUrl}auth/create_wallet/${customerId}`).then(res => {
+      console.log("Wallet creation response:", res);
+      localStorage.setItem("wallet_address", res?.data?.wallet_address);
+      window.location.reload();
+      onClose();
+    }).catch(err => {
+      console.error("Wallet creation error:", err);
+      alert("Failed to create wallet. Please try again.");
+    });
     onClose();
   };
 
@@ -153,7 +163,7 @@ export function StablecoinAgreementPage() {
   return (
     <StablecoinAgreementModal
       open={true}
-      onClose={() => navigate("/dashboard", { replace: true })}
+      onClose={() => navigate("/dashboard/stablecoin", { replace: true })}
     />
   );
 }
