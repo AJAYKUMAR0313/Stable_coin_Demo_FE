@@ -17,14 +17,14 @@ export async function fetchAvailableTokens() {
     
     const tokens = [];
     
-    if (balanceData.balance_eth > 0) {
-      tokens.push({
-        symbol: "ETH",
-        name: "Ethereum",
-        balance: balanceData.balance_eth,
-        decimals: 18,
-      });
-    }
+    // if (balanceData.balance_eth > 0) {
+    //   tokens.push({
+    //     symbol: "ETH",
+    //     name: "Ethereum",
+    //     balance: balanceData.balance_eth,
+    //     decimals: 18,
+    //   });
+    // }
     
     if (balanceData.balance_usdc > 0) {
       tokens.push({
