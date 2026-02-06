@@ -137,7 +137,7 @@ export default function ConfirmationModal({ open, onClose, token, amount }) {
                 disabled={isProcessing || isBlocked}
                 className={`
                   w-12 h-14 text-center text-2xl font-bold rounded-lg
-  text-black border-2 outline-none transition-all
+                  text-black border-2 outline-none transition-all
                   ${isProcessing || isBlocked
                     ? 'bg-gray-100 cursor-not-allowed'
                     : 'bg-white focus:border-blue-500'
