@@ -22,19 +22,21 @@ export default function LoginPage() {
 
     try {
       const response = await axios.post(`http://localhost:8000/auth/login`, {
-        username: email,
+        mail: email,
         password,
       });
 
+      console.log("Login response:", response);
       const data = response.data;
 
-      if (data.success) {
+      if (response.status === 200) {
         // ✅ REAL success
         setSuccess("Login successful!");
 
         localStorage.setItem("wallet_address", data.wallet_address);
         localStorage.setItem("username", data.username);
         localStorage.setItem("userID", data.userid);
+        localStorage.setItem("customerId", data.customer_id);
 
         console.log("Login success:", data);
 
