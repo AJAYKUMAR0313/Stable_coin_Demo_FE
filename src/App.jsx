@@ -34,7 +34,7 @@ export default function App() {
           <Route path="/dashboard/offramp" element={<OfframpPage />} />
           <Route path="/dashboard/stablecoin" element={<StablecoinDashboard/>} />
           <Route path="/dashboard/stablecoin/buy-stable" element={<FiatOnRampNew />} />
-          <Route path="/dashboard/stablecoin/transfer-stable" element={<TransferRefactor />} />
+          {/* <Route path="/dashboard/stablecoin/transfer-stable" element={<TransferRefactor />} /> */}
 
         </Route>
       </Routes>

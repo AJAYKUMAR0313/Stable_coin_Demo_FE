@@ -1,28 +1,18 @@
 import { useState, useEffect } from "react";
 import { useTransferStore } from "../transferStore";
-import { Text } from "@/components/ui/Text";
-import Input from "@/components/ui/Input";
 
 export default function AmountInput({ error, setError }) {
   const { amount, setAmount, selectedToken } = useTransferStore();
   const [touched, setTouched] = useState(false);
 
   const validateAmount = (value) => {
-    if (!value || value === "") {
-      return "Please enter an amount";
-    }
+    if (!value) return "Please enter an amount";
 
-    const numValue = Number(value);
+    const num = Number(value);
+    if (isNaN(num)) return "Enter a valid number";
+    if (num <= 0) return "Amount must be greater than 0";
 
-    if (isNaN(numValue)) {
-      return "Please enter a valid number";
-    }
-
-    if (numValue <= 0) {
-      return "Amount must be greater than 0";
-    }
-
-    if (selectedToken && numValue > selectedToken.balance) {
+    if (selectedToken && num > selectedToken.balance) {
       return "Insufficient balance";
     }
 
@@ -31,181 +21,120 @@ export default function AmountInput({ error, setError }) {
 
   const handleChange = (e) => {
     const value = e.target.value;
-    
-    // Allow only positive numbers and decimals
+
+    // allow only numbers + decimals
     if (value === "" || /^\d*\.?\d*$/.test(value)) {
       setAmount(value);
-      
+
       if (touched) {
-        const validationError = validateAmount(value);
-        setError(validationError);
+        setError(validateAmount(value));
       }
     }
   };
 
   const handleBlur = () => {
     setTouched(true);
-    const validationError = validateAmount(amount);
-    setError(validationError);
-  };
-
-  const handleQuickAmount = (percentage) => {
-    if (selectedToken) {
-      const quickAmount = (selectedToken.balance * percentage / 100).toFixed(6);
-      setAmount(quickAmount);
-      setTouched(true);
-      const validationError = validateAmount(quickAmount);
-      setError(validationError);
-    }
+    setError(validateAmount(amount));
   };
 
   useEffect(() => {
     if (touched && amount) {
-      const validationError = validateAmount(amount);
-      setError(validationError);
+      setError(validateAmount(amount));
     }
   }, [selectedToken]);
 
-  const isValid = !error && amount && touched;
-  const remaining = selectedToken && amount 
-    ? (selectedToken.balance - Number(amount)).toFixed(6)
-    : null;
+  const isValid = touched && !error && amount;
+  const remaining =
+    selectedToken && amount
+      ? (selectedToken.balance - Number(amount)).toFixed(6)
+      : null;
 
   return (
-    <div style={{ marginBottom: "20px" }}>
-      <Text.Label style={{ marginBottom: "12px", display: "block", fontSize: "15px" }}>
+    <div className="flex flex-col gap-1">
+      {/* LABEL */}
+      <label className="text-sm text-white/70">
         Amount
-      </Text.Label>
+      </label>
 
-      <div style={{ position: "relative" }}>
-        <Input
+      {/* INPUT */}
+      <div className="relative">
+        <input
           type="text"
           value={amount}
           onChange={handleChange}
           onBlur={handleBlur}
           placeholder="0.00"
           disabled={!selectedToken}
-          style={{
-            fontSize: "clamp(14px, 5vw, 26px)",
-            fontWeight: 500,
-            padding: "10px 40px 10px 10px",
-            border: `2px solid ${error && touched ? "#ef4444" : isValid ? "#22c55e" : "#e0e0e0"}`,
-            borderRadius: "12px",
-            textAlign: "left",
-          }}
+          className={`
+            w-full px-3 py-2 pr-12 rounded-xl
+            bg-white/10 backdrop-blur-md
+            border
+            text-sm text-white
+            placeholder-white/40
+            focus:outline-none
+            transition
+            ${
+              error && touched
+                ? "border-red-400/60 focus:ring-2 focus:ring-red-400/40"
+                : isValid
+                ? "border-green-400/60 focus:ring-2 focus:ring-green-400/40"
+                : "border-white/15 focus:ring-2 focus:ring-cyan-400/40"
+            }
+            ${!selectedToken ? "opacity-50 cursor-not-allowed" : ""}
+          `}
         />
 
+        {/* TOKEN SYMBOL */}
         {selectedToken && (
-          <div style={{
-            position: "absolute",
-            right: "16px",
-            top: "50%",
-            transform: "translateY(-50%)",
-            fontSize: "clamp(16px, 3vw, 20px)",
-            color: "#666",
-            fontWeight: 600,
-            pointerEvents: "none"
-          }}>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-white/60 font-semibold">
             {selectedToken.symbol}
-          </div>
+          </span>
         )}
       </div>
 
-      {/* Quick Amount Buttons
+      {/* BALANCE INFO */}
       {selectedToken && (
-        <div style={{
-          display: "flex",
-          gap: "8px",
-          marginTop: "12px"
-        }}>
-          {[25, 50, 75, 100].map(percentage => (
-            <button
-              key={percentage}
-              onClick={() => handleQuickAmount(percentage)}
-              style={{
-                flex: 1,
-                padding: "8px",
-                border: "1px solid #e0e0e0",
-                borderRadius: "8px",
-                background: "#fff",
-                fontSize: "13px",
-                cursor: "pointer",
-                transition: "all 0.2s",
-                fontWeight: 500
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#f8f9fa";
-                e.currentTarget.style.borderColor = "#000";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#fff";
-                e.currentTarget.style.borderColor = "#e0e0e0";
-              }}
-            >
-              {percentage}%
-            </button>
-          ))}
-        </div>
-      )} */}
-
-      {/* Balance Info */}
-      {selectedToken && (
-        <div style={{
-          marginTop: "12px",
-          padding: "12px",
-          background: "#f8f9fa",
-          borderRadius: "8px"
-        }}>
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "6px"
-          }}>
-            <Text.Muted style={{ fontSize: "13px" }}>Available Balance</Text.Muted>
-            <Text.Body style={{ fontSize: "13px", fontWeight: 600 }}>
+        <div
+          className="mt-2 px-3 py-2 rounded-xl
+          bg-white/10 border border-white/15
+          text-xs text-white/70"
+        >
+          <div className="flex justify-between">
+            <span>Available</span>
+            <span className="font-medium">
               {selectedToken.balance} {selectedToken.symbol}
-            </Text.Body>
+            </span>
           </div>
 
-          {amount && !error && (
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              paddingTop: "6px",
-              borderTop: "1px solid #e0e0e0"
-            }}>
-              <Text.Muted style={{ fontSize: "13px" }}>Remaining</Text.Muted>
-              <Text.Body style={{ 
-                fontSize: "13px", 
-                fontWeight: 600,
-                color: Number(remaining) >= 0 ? "#22c55e" : "#ef4444"
-              }}>
+          {amount && !error && remaining !== null && (
+            <div className="flex justify-between pt-1 mt-1 border-t border-white/10">
+              <span>Remaining</span>
+              <span
+                className={`font-medium ${
+                  Number(remaining) >= 0
+                    ? "text-green-400"
+                    : "text-red-400"
+                }`}
+              >
                 {remaining} {selectedToken.symbol}
-              </Text.Body>
+              </span>
             </div>
           )}
         </div>
       )}
 
-      {/* Error Message */}
+      {/* ERROR MESSAGE */}
       {error && touched && (
-        <div style={{
-          marginTop: "8px",
-          fontSize: "13px",
-          color: "#ef4444",
-          display: "flex",
-          alignItems: "center",
-          gap: "4px"
-        }}>
+        <p className="text-xs text-red-400 flex items-center gap-1">
           ⚠️ {error}
-        </div>
+        </p>
       )}
 
-      {/* Disabled State Helper */}
+      {/* HELPER */}
       {!selectedToken && (
-        <Text.Muted style={{ marginTop: "8px", fontSize: "12px" }}>
-          Please select a token first
-        </Text.Muted>
+        <p className="text-xs text-white/40">
+          Select a token to enter amount
+        </p>
       )}
     </div>
   );
