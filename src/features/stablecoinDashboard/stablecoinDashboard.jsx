@@ -13,37 +13,41 @@ const StablecoinDashboard = () => {
 
   /* Pagination */
   const [page, setPage] = useState(1);
-  const limit = 1;
+  const limit = 5;
+
+  /* Wallet balances */
+  const [fiatBalance, setFiatBalance] = useState(0);
+  const [totalStableValue, setTotalStableValue] = useState(0);
+
+  const [stablecoins, setStablecoins] = useState([
+    { name: "USDC", balance: 0, change: "", icon: "🔵" },
+    { name: "USDT", balance: 0, change: "", icon: "🟢" },
+    { name: "JPM", balance: 0, change: "", icon: "🔷" },
+  ]);
 
   /* Prevent scroll when modal open */
   useEffect(() => {
     document.body.style.overflow = selectedTx ? "hidden" : "auto";
   }, [selectedTx]);
 
-  const stablecoins = [
-    { name: "USDC", balance: 1352, change: "+2.5%", icon: "🔵" },
-    { name: "USDT", balance: 123, change: "+1.2%", icon: "🟢" },
-    { name: "JPM", balance: 11, change: "+0.8%", icon: "🔷" },
-  ];
-
   const articles = [
     {
       id: 1,
-      title: "Understanding Stablecoins: A Beginner's Guide",
-      excerpt: "Stablecoins maintain value by pegging to fiat currencies.",
+      title: "Understanding Stablecoins",
+      excerpt: "Pegged crypto for price stability.",
       category: "Education",
       image: "📚",
     },
     {
       id: 2,
       title: "USDC vs USDT",
-      excerpt: "Backing, transparency, and use cases compared.",
+      excerpt: "Transparency & liquidity compared.",
       category: "Comparison",
       image: "⚖️",
     },
   ];
 
-  /* Fetch transactions with pagination */
+  /* ================= TRANSACTIONS ================= */
   const fetchTransactions = async () => {
     try {
       setLoading(true);
@@ -51,81 +55,133 @@ const StablecoinDashboard = () => {
       const wallet = localStorage.getItem("wallet_address");
       const offset = (page - 1) * limit;
 
-      const response = await axios.get(`http://localhost:8000/transactions/transactions/${wallet}`, {
-        params: {
-          wallet_address: wallet,
-          limit,
-          offset,
-        },
-      });
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
 
-      setTransactions(response.data || []);
+      const response = await axios.get(
+        `${apiUrl}transactions/transactions/${wallet}`,
+        { params: { limit, offset } }
+      );
+
+      setTransactions(response?.data || []);
     } catch (error) {
-      console.error("Error fetching transactions:", error);
+      console.error("Transaction fetch error:", error);
     } finally {
       setLoading(false);
     }
   };
 
+  /* ================= WALLET BALANCE ================= */
+  const fetchWalletBalance = async () => {
+    try {
+      const wallet = localStorage.getItem("wallet_address");
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
+      const res = await axios.get(
+        `${apiUrl}wallet/bal/${wallet}`
+      );
+
+      const data = res.data;
+
+      setFiatBalance(data.totalFiat || 0);
+      setTotalStableValue(data.totalStablecoinValue || 0);
+
+      /* Map backend stablecoins to UI */
+      setStablecoins((prev) =>
+        prev.map((coin) => {
+          const backendCoin = data.stablecoins?.find(
+            (c) => c.symbol === coin.name
+          );
+
+          return {
+            ...coin,
+            balance: backendCoin
+              ? Number(backendCoin.balance).toFixed(2)
+              : 0,
+          };
+        })
+      );
+    } catch (err) {
+      console.error("Wallet balance error:", err);
+    }
+  };
+
+  /* Transactions pagination */
   useEffect(() => {
     fetchTransactions();
   }, [page]);
 
+  /* Wallet balance once */
+  useEffect(() => {
+    fetchWalletBalance();
+  }, []);
+
   return (
-    <div className="min-h-screen text-white bg-gradient-to-br from-[#071D3A] via-[#0B2A5B] to-[#0666E4]">
+    <div className="min-h-screen text-white bg-gradient-to-br from-[#071D3A] via-[#0B2A5B] to-[#0666E4] text-sm">
       <div
-        className={`max-w-[1600px] mx-auto p-8 grid grid-cols-1 lg:grid-cols-4 gap-8 transition-all duration-300 ${
+        className={`max-w-[1400px] mx-auto px-5 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6 transition-all duration-300 ${
           selectedTx ? "blur-sm pointer-events-none" : ""
         }`}
       >
-        <main className="lg:col-span-3 flex flex-col gap-8">
-          {/* BALANCE */}
-          <div className="grid md:grid-cols-2 gap-6">
+        {/* MAIN */}
+        <main className="lg:col-span-3 flex flex-col gap-6">
+
+          {/* BALANCES */}
+          <div className="grid md:grid-cols-2 gap-4">
             {[
-              { label: "Fiat Balance", value: "₹32,451", icon: "💵" },
-              { label: "Total Stablecoins", value: "$1,486", icon: "🪙" },
+              { label: "Fiat Balance", value: `₹${fiatBalance}`, icon: "💵" },
+              {
+                label: "Stablecoins",
+                value: `$${totalStableValue}`,
+                icon: "🪙",
+              },
             ].map((item, i) => (
               <div
                 key={i}
-                className="bg-white/10 backdrop-blur-xl border border-white/15 rounded-2xl p-7 shadow-xl hover:-translate-y-1 transition"
+                className="bg-white/10 backdrop-blur-lg border border-white/15 rounded-xl p-5 shadow-md"
               >
-                <div className="flex justify-between mb-4">
-                  <span className="text-sm text-white/70">{item.label}</span>
-                  <span className="text-3xl">{item.icon}</span>
+                <div className="flex justify-between mb-2">
+                  <span className="text-xs text-white/70">
+                    {item.label}
+                  </span>
+                  <span className="text-xl">{item.icon}</span>
                 </div>
-                <div className="text-4xl font-bold">{item.value}</div>
+                <div className="text-2xl font-semibold">
+                  {item.value}
+                </div>
               </div>
             ))}
           </div>
 
           {/* HOLDINGS */}
-          <section className="bg-white/10 backdrop-blur-xl border border-white/15 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold mb-5">Stablecoin Holdings</h2>
+          <section className="bg-white/10 backdrop-blur-lg border border-white/15 rounded-xl p-5">
+            <h2 className="text-base font-semibold mb-4">
+              Stablecoin Holdings
+            </h2>
 
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-3 gap-3">
               {stablecoins.map((coin) => (
                 <div
                   key={coin.name}
-                  className="bg-white/10 border border-white/15 rounded-xl p-5 hover:bg-white/20 hover:-translate-y-1 transition"
+                  className="bg-white/10 border border-white/15 rounded-lg p-4 hover:bg-white/20 transition"
                 >
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-4xl">{coin.icon}</span>
-                    <div>
-                      <p className="font-semibold">{coin.name}</p>
-                      <p className="text-xs text-green-400">{coin.change}</p>
-                    </div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-2xl">{coin.icon}</span>
+                    <p className="font-medium text-sm">{coin.name}</p>
                   </div>
-                  <p className="text-2xl font-bold">${coin.balance}</p>
+                  <p className="text-lg font-semibold">
+                    ${coin.balance}
+                  </p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* QUICK SERVICES */}
-          <section className="bg-white/10 backdrop-blur-xl border border-white/15 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold mb-5">Quick Services</h2>
+          <section className="bg-white/10 backdrop-blur-lg border border-white/15 rounded-xl p-5">
+            <h2 className="text-base font-semibold mb-4">
+              Quick Services
+            </h2>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
                 { icon: "💰", label: "Buy", path: "/dashboard/stablecoin/buy-stable" },
                 { icon: "💱", label: "Transfer", path: "/dashboard/transfer" },
@@ -134,35 +190,41 @@ const StablecoinDashboard = () => {
               ].map((item, i) => (
                 <button
                   key={i}
-                  className="p-5 rounded-xl bg-white/10 border border-white/15 hover:bg-white/20 transition"
+                  className="p-4 rounded-lg bg-white/10 border border-white/15 hover:bg-white/20 transition"
                   onClick={() => navigate(item.path)}
                 >
-                  <div className="text-4xl mb-2">{item.icon}</div>
-                  <p className="font-semibold text-sm">{item.label}</p>
+                  <div className="text-2xl mb-1">{item.icon}</div>
+                  <p className="text-xs font-medium">{item.label}</p>
                 </button>
               ))}
             </div>
           </section>
 
           {/* TRANSACTIONS */}
-          <section className="bg-white/10 backdrop-blur-xl border border-white/15 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold mb-5">Recent Transactions</h2>
+          <section className="bg-white/10 backdrop-blur-lg border border-white/15 rounded-xl p-5">
+            <h2 className="text-base font-semibold mb-4">
+              Recent Transactions
+            </h2>
 
             {loading ? (
-              <p className="text-white/70 text-sm">Loading transactions...</p>
-            ) : transactions.length === 0 ? (
-              <p className="text-white/70 text-sm">No transactions found</p>
+              <p className="text-white/70 text-xs">
+                Loading transactions...
+              </p>
+            ) : transactions?.length === 0 ? (
+              <p className="text-white/70 text-xs">
+                No transactions found
+              </p>
             ) : (
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 {transactions.map((tx) => (
                   <div
                     key={tx.tx_hash}
                     onClick={() => setSelectedTx(tx)}
-                    className="flex justify-between items-center p-4 rounded-xl bg-white/10 border border-white/15 hover:bg-white/20 cursor-pointer transition"
+                    className="flex justify-between items-center p-3 rounded-lg bg-white/10 border border-white/15 hover:bg-white/20 cursor-pointer transition"
                   >
                     <div>
                       <p
-                        className={`font-medium ${
+                        className={`font-medium text-xs ${
                           tx.transaction_type === "RECEIVED"
                             ? "text-green-400"
                             : "text-red-400"
@@ -170,15 +232,17 @@ const StablecoinDashboard = () => {
                       >
                         {tx.transaction_type} {tx.asset}
                       </p>
-                      <p className="text-xs text-white/60">{tx.timestamp}</p>
+                      <p className="text-[10px] text-white/60">
+                        {tx.timestamp}
+                      </p>
                     </div>
 
                     <div className="text-right">
-                      <p className="font-bold text-cyan-300">
+                      <p className="font-semibold text-cyan-300 text-xs">
                         {tx.amount} {tx.asset}
                       </p>
                       <span
-                        className={`px-2 py-1 rounded-full text-xs ${statusStyle(
+                        className={`px-2 py-0.5 rounded-full text-[10px] ${statusStyle(
                           tx.status
                         )}`}
                       >
@@ -188,22 +252,24 @@ const StablecoinDashboard = () => {
                   </div>
                 ))}
 
-                {/* Pagination */}
-                <div className="flex justify-between items-center mt-4">
+                {/* PAGINATION */}
+                <div className="flex justify-between mt-3">
                   <button
                     disabled={page === 1}
                     onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                    className="px-4 py-2 bg-white/10 rounded-lg disabled:opacity-40"
+                    className="px-3 py-1 bg-white/10 rounded-lg text-xs disabled:opacity-40"
                   >
-                    ← Previous
+                    ← Prev
                   </button>
 
-                  <span className="text-sm text-white/70">Page {page}</span>
+                  <span className="text-xs text-white/70">
+                    Page {page}
+                  </span>
 
                   <button
                     disabled={transactions.length < limit}
                     onClick={() => setPage((p) => p + 1)}
-                    className="px-4 py-2 bg-white/10 rounded-lg disabled:opacity-40"
+                    className="px-3 py-1 bg-white/10 rounded-lg text-xs disabled:opacity-40"
                   >
                     Next →
                   </button>
@@ -214,32 +280,38 @@ const StablecoinDashboard = () => {
         </main>
 
         {/* SIDEBAR */}
-        <aside className="hidden lg:flex flex-col gap-4">
-          <h3 className="text-xl font-semibold mb-2">Insights</h3>
+        <aside className="hidden lg:flex flex-col gap-3">
+          <h3 className="text-base font-semibold">Insights</h3>
 
           {articles.map((article) => (
             <div
               key={article.id}
-              className="bg-white/10 backdrop-blur-xl border border-white/15 rounded-xl hover:bg-white/20 transition"
+              className="bg-white/10 backdrop-blur-lg border border-white/15 rounded-lg hover:bg-white/20 transition"
             >
-              <div className="p-6 text-4xl text-center border-b border-white/10">
+              <div className="p-4 text-2xl text-center border-b border-white/10">
                 {article.image}
               </div>
-              <div className="p-4">
-                <span className="text-xs text-cyan-300 font-semibold">
+              <div className="p-3">
+                <span className="text-[10px] text-cyan-300 font-semibold">
                   {article.category}
                 </span>
-                <p className="text-sm font-semibold mt-2">{article.title}</p>
-                <p className="text-xs text-white/60 mt-2">{article.excerpt}</p>
+                <p className="text-xs font-medium mt-1">
+                  {article.title}
+                </p>
+                <p className="text-[10px] text-white/60 mt-1">
+                  {article.excerpt}
+                </p>
               </div>
             </div>
           ))}
         </aside>
       </div>
 
-      {/* Modal */}
       {selectedTx && (
-        <TransactionDetailsModal tx={selectedTx} onClose={() => setSelectedTx(null)} />
+        <TransactionDetailsModal
+          tx={selectedTx}
+          onClose={() => setSelectedTx(null)}
+        />
       )}
     </div>
   );
