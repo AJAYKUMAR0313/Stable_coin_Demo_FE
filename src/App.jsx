@@ -11,6 +11,8 @@ import OfframpPage from "./features/offramp/pages/OfframpPage";
 
 import DashboardDemo from "./pages/DashboardDemo";
 import StablecoinDashboard from "./features/stablecoinDashboard/stablecoinDashboard";
+import AgreementRedirectLoader from "./features/stablecoinDashboard/AgreementRedirectLoader";
+import { StablecoinAgreementPage } from "./features/stablecoinDashboard/StablecoinAgreementPage";
 
 // In your router
 import FiatOnRampNew from './features/onramp-refactor/pages/FiatOnRamp';
@@ -33,6 +35,8 @@ export default function App() {
           <Route path="/dashboard/transactions" element={<TransactionHistory />} />
           <Route path="/dashboard/offramp" element={<OfframpPage />} />
           <Route path="/dashboard/stablecoin" element={<StablecoinDashboard/>} />
+          <Route path="/dashboard/stablecoin/agreement" element={<AgreementRedirectLoader />} />
+          <Route path="/dashboard/stablecoin/check-agreement" element={<StablecoinAgreementPage />} />
           <Route path="/dashboard/stablecoin/buy-stable" element={<FiatOnRampNew />} />
           <Route path="/dashboard/stablecoin/transfer-stable" element={<TransferRefactor />} />
 

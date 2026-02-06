@@ -45,7 +45,7 @@ export default function NavButtons() {
 
         {/* STABLECOINS CTA */}
         <button
-          onClick={() => navigate("/dashboard/stablecoin")}
+          onClick={() => navigate("/dashboard/stablecoin/agreement")}
           className="px-5 py-2 rounded-full text-sm font-semibold
             bg-gradient-to-r from-cyan-400 to-blue-600
             text-black shadow-lg
