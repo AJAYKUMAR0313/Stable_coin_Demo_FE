@@ -1,77 +1,123 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTransferStore } from "../transferStore";
 
 export default function PayeeSelector() {
   const [search, setSearch] = useState("");
+  const [expanded, setExpanded] = useState(false);
 
   const {
     recipient,
     setRecipient,
+    loadPayees,
+    payees,
   } = useTransferStore();
 
-  // TEMP MOCK DATA
-  const payees = [
-    {
-      id: 1,
-      name: "Ajay Kumar",
-      wallet: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
-    },
-    {
-      id: 2,
-      name: "Swarnaraj",
-      wallet: "0xA16b5E6a4e4bD5E0E1f3A9c9F34b56a7d8E12345",
-    },
-  ];
+  useEffect(() => {
+    loadPayees(localStorage.getItem("customerId"));
+  }, []);
 
   const filteredPayees = payees.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
+    p.payee_name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const visiblePayees = expanded
+    ? filteredPayees
+    : filteredPayees.slice(0, 4);
 
   return (
     <div className="flex flex-col gap-3">
+      {/* LABEL */}
       <label className="text-sm text-white/80">
-        Select Payee
+        Pay to Saved Payee
       </label>
 
       {/* SEARCH */}
       <input
         type="text"
-        placeholder="Search saved payees"
+        placeholder="Search payee name"
         value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full px-3 py-2 rounded-xl bg-white/10 border border-white/15
-                   text-sm text-white placeholder-white/40
-                   focus:outline-none focus:ring-2 focus:ring-cyan-400/40"
+        onChange={(e) => {
+          setSearch(e.target.value);
+          setExpanded(true);
+        }}
+        className="
+          w-full px-3 py-2 rounded-xl
+          bg-white/10 backdrop-blur-md
+          border border-white/15
+          text-sm text-white placeholder-white/40
+          focus:outline-none focus:ring-2 focus:ring-cyan-400/40
+        "
       />
 
       {/* PAYEE LIST */}
-      <div className="flex flex-col gap-2 max-h-[180px] overflow-y-auto no-scrollbar">
-        {filteredPayees.length === 0 && (
-          <p className="text-xs text-white/40 text-center py-3">
+      <div className="flex flex-col gap-2">
+        {visiblePayees.length === 0 && (
+          <p className="text-xs text-white/40 text-center py-2">
             No payees found
           </p>
         )}
 
-        {filteredPayees.map((payee) => (
-          <button
-            key={payee.id}
-            onClick={() => setRecipient(payee.wallet)}   // 🔥 IMPORTANT
-            className={`w-full p-3 rounded-xl text-left transition border
-              ${
-                recipient === payee.wallet
-                  ? "bg-cyan-400/20 border-cyan-400"
-                  : "bg-white/10 border-white/15 hover:bg-white/20"
-              }`}
-          >
-            <p className="text-sm font-medium text-white">
-              {payee.name}
-            </p>
-            <p className="text-xs text-white/50 font-mono truncate">
-              {payee.wallet}
-            </p>
-          </button>
-        ))}
+        {visiblePayees.map((payee) => {
+          const isSelected = recipient === payee.wallet_address;
+
+          return (
+            <button
+              key={payee.id}
+              onClick={() => setRecipient(payee.wallet_address)}
+              className={`
+                w-full flex items-center justify-between
+                p-3 rounded-xl transition
+                border
+                ${
+                  isSelected
+                    ? "bg-cyan-400/20 border-cyan-400"
+                    : "bg-white/10 border-white/15 hover:bg-white/20"
+                }
+              `}
+            >
+              <div className="flex flex-col text-left">
+                <span className="text-sm font-medium text-white">
+                  {payee.payee_name}
+                </span>
+                <span className="text-xs text-white/50 font-mono truncate max-w-[220px]">
+                  {payee.wallet_address}
+                </span>
+              </div>
+
+              {isSelected && (
+                <span className="text-cyan-400 text-sm font-semibold">
+                  ✓
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
+
+      {/* VIEW ALL TOGGLE */}
+      {!expanded && filteredPayees.length > 4 && (
+        <button
+          onClick={() => setExpanded(true)}
+          className="text-xs text-cyan-300 hover:text-cyan-200 self-start"
+        >
+          View all payees →
+        </button>
+      )}
+
+      {/* SELECTED PAYEE CHIP */}
+      {recipient && (
+        <div className="mt-2 p-3 rounded-xl bg-white/10 border border-white/15">
+          <p className="text-xs text-white/50 mb-1">
+            Selected Payee
+          </p>
+          <p className="text-sm text-white font-medium">
+            {payees.find(p => p.wallet_address === recipient)?.payee_name}
+          </p>
+          <p className="text-xs text-white/50 font-mono break-all">
+            {recipient}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

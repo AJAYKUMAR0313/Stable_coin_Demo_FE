@@ -166,4 +166,34 @@ export const useTransferStore = create((set, get) => ({
       transferResult: null,
       errorMessage: null,
     }),
+
+  payees: [],
+  payeesLoading: false,
+
+  loadPayees: async (customerId) => {
+    set({ payeesLoading: true });
+    try {
+      const res = await fetch(`http://localhost:8000/bank_details/payees/${customerId}`);
+      console.log("Response:", res);
+      const data = await res.json();
+      console.log("Loaded payees:", data);
+      set({ payees: data || [] });
+    } catch (e) {
+      console.error("Failed to load payees", e);
+      set({ payees: [] });
+    } finally {
+      set({ payeesLoading: false });
+    }
+  },
+
+  addPayee: async (customerId, payload) => {
+    await fetch(`http://localhost:8000/bank_details/payee/customer_id`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }); 
+
+    // 👇 THIS is your refreshPayees
+    await get().loadPayees(customerId);
+  },
 }));
