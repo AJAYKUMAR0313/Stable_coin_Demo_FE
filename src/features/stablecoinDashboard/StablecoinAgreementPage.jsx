@@ -47,9 +47,11 @@ export function StablecoinAgreementModal({ open, onClose }) {
         import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
 
       const customerId = localStorage.getItem("customerId");
-
       const res = await axios.post(
-        `${apiUrl}auth/create_wallet/${customerId}`
+        `${apiUrl}auth/create_wallet/customer_id`,{
+          customer_id: customerId,
+          tenant_id: localStorage.getItem("tenantId"),
+        }
       );
 
       if (res?.status >= 200 && res?.status < 300) {

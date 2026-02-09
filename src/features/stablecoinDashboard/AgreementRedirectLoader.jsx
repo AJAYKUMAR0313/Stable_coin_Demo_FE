@@ -12,9 +12,16 @@ export default function AgreementRedirectLoader() {
     const checkAgreement = async () => {
       try {
         const customerId = localStorage.getItem("customerId");
-        
-        const api = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
-        const res = await axios.get(`${api}bank_details/is_wallet/${customerId}`);
+
+        const api =
+          import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
+        const res = await axios.get(`${api}bank_details/is_wallet`, {
+          params: {
+            tenant_id: localStorage.getItem("tenantId"),
+            customer_id: customerId,
+          },
+        });
+
         // console.log("Agreement check response:", res);
         // const val = true; // simulate backend response
         // // const res = { data: val };
