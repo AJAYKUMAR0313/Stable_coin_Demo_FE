@@ -11,55 +11,19 @@ export async function fetchAvailableTokens() {
     const userAddress = localStorage.getItem("wallet_address") || "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb";
     
     const response = await apiClient.get(`/wallet/balance/${userAddress}`);
-    const balanceData = response.data;
+    const balanceData = response.stablecoin ;
 
     console.log("Fetched wallet balances:", balanceData);
     
-    const tokens = [];
-    
-    // if (balanceData.balance_eth > 0) {
-    //   tokens.push({
-    //     symbol: "ETH",
-    //     name: "Ethereum",
-    //     balance: balanceData.balance_eth,
-    //     decimals: 18,
-    //   });
-    // }
-    
-    if (balanceData.balance_usdc > 0) {
-      tokens.push({
-        symbol: "USDC",
-        name: "USD Coin",
-        balance: balanceData.balance_usdc,
-        decimals: 6,
-      });
-    }
-    
-    return tokens.length > 0 ? tokens : [
-      {
-        symbol: "USDC",
-        name: "USD Coin",
-        balance: 0,
-        decimals: 6,
-      },
-    ];
+     // stablecoins is already a list of objects
+    return response.data.stablecoins || [];
   } catch (error) {
     console.error("Error fetching available tokens:", error);
-    
-    // Fallback demo data
+
+    // fallback shape stays the same
     return [
-      {
-        symbol: "USDC",
-        name: "USD Coin",
-        balance: 1000.50,
-        decimals: 6,
-      },
-      {
-        symbol: "ETH",
-        name: "Ethereum",
-        balance: 0.5,
-        decimals: 18,
-      },
+      { symbol: "USDC", balance: 0 },
+      { symbol: "USDT", balance: 0 },
     ];
   }
 }
