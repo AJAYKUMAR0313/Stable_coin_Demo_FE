@@ -9,6 +9,7 @@ export default function TransferPage() {
   const [showSummary, setShowSummary] = useState(false);
   const [showResult, setShowResult] = useState(false);
 
+
   const { executeTransfer, resetTransfer } = useTransferStore();
 
   const handleConfirm = async () => {
@@ -51,7 +52,9 @@ export default function TransferPage() {
             resetTransfer();
             setShowResult(false);
           }}
-          onGoToDashboard={() => (window.location.href = "/dashboard")}
+          onGoToDashboard={() =>
+            (window.location.href = "/dashboard/stablecoin")
+          }
         />
       </Modal>
     </div>

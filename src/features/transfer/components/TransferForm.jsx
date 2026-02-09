@@ -7,6 +7,9 @@ import BalanceDisplay from "./BalanceDisplay";
 import TransferModeSelector from "./TransferModeSelector";
 import PayeeSelector from "./PayeeSelector";
 import UserSearchInput from "./UserSearchInput";
+import Modal from "./Modal";
+import AddPayee from "./AddPayee";
+// import { useTransferStore } from "../transferStore"; // Import payees and refresh function
 
 export default function TransferForm({ onContinue }) {
   const {
@@ -18,11 +21,18 @@ export default function TransferForm({ onContinue }) {
     setNote,
     transferMode,
     isCheckingRecipient,
+    payees,
+    loadPayees
   } = useTransferStore();
 
   const [recipientError, setRecipientError] = useState(null);
   const [amountError, setAmountError] = useState(null);
   const [showNote, setShowNote] = useState(false);
+  const [showAddPayee, setShowAddPayee] = useState(false);
+
+  const user = {
+    customer_id: localStorage.getItem("customerId"), // Replace with actual user data
+  }
 
   const isFormValid = () => {
     if (!recipient) return false;
@@ -41,7 +51,7 @@ export default function TransferForm({ onContinue }) {
       className="bg-white/10 backdrop-blur-xl
       border border-white/15
       rounded-2xl max-w-lg w-full mx-auto
-      h-[70vh] flex flex-col"
+      h-full flex flex-col"
     >
       {/* FORM CONTENT */}
       <div className="flex-1 overflow-y-auto no-scrollbar px-4 pt-4 pb-4">
@@ -61,7 +71,17 @@ export default function TransferForm({ onContinue }) {
               />
             )}
 
-            {transferMode === "PAYEE" && <PayeeSelector />}
+            {transferMode === "PAYEE" && (
+              <>
+                <PayeeSelector payees={payees}/>
+                <button
+                  onClick={() => setShowAddPayee(true)}
+                  className="text-xs text-cyan-300 hover:underline text-left"
+                >
+                  + Add new payee
+                </button>
+              </>
+            )}
 
             {transferMode === "SEARCH" && <UserSearchInput />}
           </div>
@@ -123,6 +143,17 @@ export default function TransferForm({ onContinue }) {
           </button>
         </div>
       )}
+
+      <Modal open={showAddPayee} onClose={() => setShowAddPayee(false)}>
+        <AddPayee
+          customerId={user.customer_id}
+          onSuccess={() => {
+            loadPayees(user.customer_id); // reload saved payees
+            setShowAddPayee(false);
+          }}
+          onCancel={() => setShowAddPayee(false)}
+        />
+      </Modal>
     </div>
   );
 }
