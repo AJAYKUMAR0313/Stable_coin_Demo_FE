@@ -37,6 +37,7 @@ export default function LoginPage() {
         localStorage.setItem("username", data.name);
         localStorage.setItem("id", data.id);
         localStorage.setItem("customerId", data.customer_id);
+        localStorage.setItem("tenantId", data.tenant_id);
 
         console.log("Login success:", data);
 
