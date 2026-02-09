@@ -68,7 +68,7 @@ export default function AddPayee({ customerId, onSuccess, onCancel }) {
         onChange={(e) =>
           handleChange("payee_name", e.target.value)
         }
-        className="glass-input"
+        className="glass-input border border-black/20 rounded-sm px-4"
       />
 
       {/* NICKNAME */}
@@ -78,7 +78,7 @@ export default function AddPayee({ customerId, onSuccess, onCancel }) {
         onChange={(e) =>
           handleChange("nickname", e.target.value)
         }
-        className="glass-input"
+        className="glass-input border border-black/20 rounded-sm px-4"
       />
 
       {/* PHONE */}
@@ -88,7 +88,7 @@ export default function AddPayee({ customerId, onSuccess, onCancel }) {
         onChange={(e) =>
           handleChange("phone_number", e.target.value)
         }
-        className="glass-input"
+        className="glass-input border border-black/20 rounded-sm px-4"
       />
 
       {/* BANK ACCOUNT */}
@@ -98,7 +98,7 @@ export default function AddPayee({ customerId, onSuccess, onCancel }) {
         onChange={(e) =>
           handleChange("bank_account_number", e.target.value)
         }
-        className="glass-input"
+        className="glass-input border border-black/20 rounded-sm px-4"
       />
 
       {/* WALLET */}
@@ -108,7 +108,7 @@ export default function AddPayee({ customerId, onSuccess, onCancel }) {
         onChange={(e) =>
           handleChange("wallet_address", e.target.value)
         }
-        className="glass-input font-mono"
+        className="glass-input border border-black/20 rounded-sm px-4 font-mono"
       />
 
       {/* FAVORITE */}
