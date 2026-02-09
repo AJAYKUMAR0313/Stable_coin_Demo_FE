@@ -79,6 +79,8 @@ export async function fetchAvailableTokens() {
         decimals: 6,
       });
     }
+
+    console.log("Fetched tokens:", tokens);
     
     // Return tokens (only those with balance > 0)
     return tokens.length > 0 ? tokens : [

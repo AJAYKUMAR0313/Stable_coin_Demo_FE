@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import { fetchAvailableTokens, executeTransferRequest } from "./services";
+import { executeTransferRequest } from "./services";
 import axios from "axios";
+import { fetchAvailableTokens } from "../offramp-neon/services";
 
 export const useTransferStore = create((set, get) => ({
   /* =========================
