@@ -55,11 +55,18 @@ export async function fetchUserBalance() {
 }
 
 export async function buyStablecoins({ address, tokenSymbol, tokenAmount, pin }) {
-  const res = await apiClient.post(ENDPOINTS.BUY_STABLECOINS, {
-    type: tokenSymbol,
-    amount: tokenAmount,
-    address: address,
-    // pin: pin,
-  });
+  const res = await apiClient.post(
+    ENDPOINTS.BUY_STABLECOINS,
+    null, // no body
+    {
+      params: {
+        address,
+        type: tokenSymbol,
+        amount: tokenAmount,
+        // pin,
+      },
+    }
+  );
+
   return res.data;
 }
