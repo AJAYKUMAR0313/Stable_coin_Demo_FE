@@ -8,9 +8,13 @@ const EXTERNAL_WITHDRAW_ADDRESS = import.meta.env.VITE_MAIN_WALLET_ADDRESS || "0
  */
 export async function fetchAvailableTokens() {
   try {
-    const userAddress = localStorage.getItem("wallet_address") || "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb";
+    const userAddress = localStorage.getItem("wallet_address");
     
-    const response = await apiClient.get(`/wallet/balance/${userAddress}`);
+    const response = await apiClient.get("/wallet/balance", {
+    params: {
+      userAddress: userAddress,
+    },
+});
     const balanceData = response.stablecoin ;
 
     console.log("Fetched wallet balances:", balanceData);

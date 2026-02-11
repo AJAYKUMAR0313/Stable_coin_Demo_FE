@@ -75,9 +75,11 @@ const StablecoinDashboard = () => {
     try {
       const wallet = localStorage.getItem("wallet_address");
       const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
-      const res = await axios.get(
-        `${apiUrl}wallet/balance/${wallet}`
-      );
+      const res = await axios.get(`${apiUrl}wallet/balance`, {
+        params: {
+          wallet: wallet,
+        },
+      });
 
       const data = res.data;
 
