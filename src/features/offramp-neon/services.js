@@ -12,7 +12,7 @@ export async function fetchAvailableTokens() {
     
     const response = await apiClient.get("/wallet/balance", {
     params: {
-      userAddress: userAddress,
+      wallet_address:userAddress,
     },
 });
     const balanceData = response.stablecoin ;
