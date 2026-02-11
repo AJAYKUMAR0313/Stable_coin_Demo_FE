@@ -78,7 +78,7 @@ const StablecoinDashboard = () => {
       const res = await axios.get(
         `${apiUrl}wallet/balance`,
         {
-          params: { tenant_id: localStorage.getItem("tenantId") ,wallet_address: wallet},
+          params: { wallet_address: wallet },
         }
       );
 
