@@ -34,14 +34,21 @@ export default function TransactionStatus() {
         </button>
       </div>
 
-      <a
+      {(localStorage.getItem("tenantId") === "2") ?(<a
+        href={`https://sepolia.etherscan.io/tx/${transactionHash}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1 mt-3 text-sm text-blue-600 hover:text-blue-700 hover:underline"
+      >
+        View on Sepolia Explorer →
+      </a>) : (<a
         href={`https://etherscan.io/tx/${transactionHash}`}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-1 mt-3 text-sm text-blue-600 hover:text-blue-700 hover:underline"
       >
         View on Explorer →
-      </a>
+      </a>)}
     </div>
   );
 }

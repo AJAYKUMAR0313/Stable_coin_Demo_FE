@@ -26,17 +26,17 @@ export default function UserSearchInput() {
       const res = await axios.get(
         "http://localhost:8000/wallet/search-users",
         {
-          params: { query: q },
+          params: { query: q,tenant_id: localStorage.getItem("tenantId") ,current_customer_id: localStorage.getItem("customerId") },
         }
       );
 
       setUsers(res.data || []);
     } catch (err) {
-      console.error(err);
+      // console.error(err,err.response);
 
       // Handle FastAPI error format
       const apiError =
-        err?.response?.data?.detail?.[0]?.msg ||
+        err?.response?.data?.detail?.[0]?.msg || err?.response?.data?.detail ||
         "Failed to search users";
 
       setError(apiError);
