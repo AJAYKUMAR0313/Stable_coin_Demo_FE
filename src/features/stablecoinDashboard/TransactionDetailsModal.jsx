@@ -99,14 +99,29 @@ export default function TransactionDetailsModal({ tx, onClose }) {
 
         {/* Footer */}
         <div className="flex justify-between items-center mt-10">
-          <a
+        {(localStorage.getItem("tenantId") === "2") ?(<a
+            href={`https://sepolia.etherscan.io/tx/${tx.tx_hash}`}
+            target="_blank"
+            rel="noreferrer"
+            className="text-cyan-300 text-sm hover:underline"
+          >
+            View on Explorer →
+          </a>):(<a
             href={`https://etherscan.io/tx/${tx.tx_hash}`}
             target="_blank"
             rel="noreferrer"
             className="text-cyan-300 text-sm hover:underline"
           >
             View on Explorer →
-          </a>
+          </a>)}
+          {/* <a
+            href={`https://etherscan.io/tx/${tx.tx_hash}`}
+            target="_blank"
+            rel="noreferrer"
+            className="text-cyan-300 text-sm hover:underline"
+          >
+            View on Explorer →
+          </a> */}
 
           <button
             onClick={onClose}
