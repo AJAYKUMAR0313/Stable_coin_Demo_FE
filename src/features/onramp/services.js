@@ -2,34 +2,50 @@ import apiClient from "@/services/apiClient";
 import { ENDPOINTS } from "@/services/endpoints";
 
 export async function fetchSupportedStablecoins() {
-  // 🔹 Demo-only static data with individual rates
+  // CoinGecko IDs mapped to your tokens
+  const COIN_IDS = {
+    USDC: "usd-coin",
+    USDT: "tether",
+    DAI: "dai",
+    ETH: "ethereum",
+  };
+
+  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${Object.values(
+    COIN_IDS
+  ).join(",")}&vs_currencies=inr`;
+
+  const response = await fetch(url);
+  const prices = await response.json();
+
   return [
     {
       symbol: "USDC",
       name: "USD Coin",
       decimals: 6,
-      rateInr: 83.50, // Rate per token in INR
+      rateInr: prices["usd-coin"]?.inr ?? 0,
     },
     {
       symbol: "USDT",
       name: "Tether USD",
       decimals: 6,
-      rateInr: 83.45, // Rate per token in INR
+      rateInr: prices["tether"]?.inr ?? 0,
     },
     {
       symbol: "DAI",
       name: "Dai Stablecoin",
       decimals: 18,
-      rateInr: 83.40, // Rate per token in INR
-    },
-    {
-      symbol: "ETH",
-      name: "Ethereum",
-      decimals: 18,
-      rateInr: 83.35,
+      rateInr: prices["dai"]?.inr ?? 0,
     }
+    // },
+    // {
+    //   symbol: "ETH",
+    //   name: "Ethereum",
+    //   decimals: 18,
+    //   rateInr: prices["ethereum"]?.inr ?? 0,
+    // },
   ];
 }
+
 
 export async function buyStablecoins({ address, tokenSymbol, tokenAmount }) {
   const res = await apiClient.post(ENDPOINTS.BUY_STABLECOINS, {
