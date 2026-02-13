@@ -1,5 +1,7 @@
 import { create } from "zustand";
-import { fetchAvailableTokens, executeTransferRequest } from "./services";
+import { executeTransferRequest } from "./services";
+import axios from "axios";
+import { fetchAvailableTokens } from "../offramp-neon/services";
 
 export const useTransferStore = create((set, get) => ({
   /* =========================
@@ -191,9 +193,21 @@ export const useTransferStore = create((set, get) => ({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
-    }); 
-
+    })
     // 👇 THIS is your refreshPayees
     await get().loadPayees(customerId);
+  },
+
+  deletePayee: async (customerId, payeeId) => {
+    try {
+      await axios.delete(`http://localhost:8000/bank_details/payee/payee_id`,{
+        params: { customer_id: customerId,
+          payee_id: payeeId
+        },
+      });
+      // await get().loadPayees(customerId);
+    } catch (e) {
+      console.error("Failed to delete payee", e);
+    }
   },
 }));
