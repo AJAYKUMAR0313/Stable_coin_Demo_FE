@@ -28,6 +28,7 @@ export default function AddPayee({ customerId, onSuccess, onCancel }) {
       return;
     }
 
+    // console.log("handle submit...");
     setLoading(true);
 
     try {
@@ -38,9 +39,7 @@ export default function AddPayee({ customerId, onSuccess, onCancel }) {
 
       onSuccess?.(); // close modal + refresh list
     } catch (e) {
-      setError(
-        e?.message || "Failed to add payee. Please try again."
-      );
+      setError(e?.message || "Failed to add payee. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -65,9 +64,7 @@ export default function AddPayee({ customerId, onSuccess, onCancel }) {
       <input
         placeholder="Payee name *"
         value={form.payee_name}
-        onChange={(e) =>
-          handleChange("payee_name", e.target.value)
-        }
+        onChange={(e) => handleChange("payee_name", e.target.value)}
         className="glass-input border border-black/20 rounded-sm px-4"
       />
 
@@ -75,9 +72,7 @@ export default function AddPayee({ customerId, onSuccess, onCancel }) {
       <input
         placeholder="Nickname (optional)"
         value={form.nickname}
-        onChange={(e) =>
-          handleChange("nickname", e.target.value)
-        }
+        onChange={(e) => handleChange("nickname", e.target.value)}
         className="glass-input border border-black/20 rounded-sm px-4"
       />
 
@@ -85,9 +80,7 @@ export default function AddPayee({ customerId, onSuccess, onCancel }) {
       <input
         placeholder="Phone number"
         value={form.phone_number}
-        onChange={(e) =>
-          handleChange("phone_number", e.target.value)
-        }
+        onChange={(e) => handleChange("phone_number", e.target.value)}
         className="glass-input border border-black/20 rounded-sm px-4"
       />
 
@@ -95,9 +88,7 @@ export default function AddPayee({ customerId, onSuccess, onCancel }) {
       <input
         placeholder="Bank account number"
         value={form.bank_account_number}
-        onChange={(e) =>
-          handleChange("bank_account_number", e.target.value)
-        }
+        onChange={(e) => handleChange("bank_account_number", e.target.value)}
         className="glass-input border border-black/20 rounded-sm px-4"
       />
 
@@ -105,9 +96,7 @@ export default function AddPayee({ customerId, onSuccess, onCancel }) {
       <input
         placeholder="Wallet address *"
         value={form.wallet_address}
-        onChange={(e) =>
-          handleChange("wallet_address", e.target.value)
-        }
+        onChange={(e) => handleChange("wallet_address", e.target.value)}
         className="glass-input border border-black/20 rounded-sm px-4 font-mono"
       />
 
@@ -116,19 +105,13 @@ export default function AddPayee({ customerId, onSuccess, onCancel }) {
         <input
           type="checkbox"
           checked={form.is_favorite}
-          onChange={(e) =>
-            handleChange("is_favorite", e.target.checked)
-          }
+          onChange={(e) => handleChange("is_favorite", e.target.checked)}
         />
         Mark as favorite
       </label>
 
       {/* ERROR */}
-      {error && (
-        <p className="text-xs text-red-400">
-          ⚠ {error}
-        </p>
-      )}
+      {error && <p className="text-xs text-red-400">⚠ {error}</p>}
 
       {/* ACTIONS */}
       <div className="flex gap-3 pt-2">

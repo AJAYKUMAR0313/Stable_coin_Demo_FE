@@ -76,27 +76,29 @@ export async function fetchSupportedStablecoins() {
 }
 
 export async function fetchUserBalance() {
-  // Mock API call - replace with real endpoint
-  const res = await apiClient.get(ENDPOINTS.USER_BALANCE(localStorage.getItem("customerId")));
-  // return res.data;
+
+  const customerId = localStorage.getItem("customerId");
+  const tenantId = localStorage.getItem("tenantId");
+
+  const res = await apiClient.get(
+    ENDPOINTS.USER_BALANCE,   // endpoint without params
+    {
+      params: {
+        customer_id: customerId,
+        tenant_id: tenantId
+      }
+    }
+  );
+
   return {
-    balance: res.data.fiat_bank_balance ,
-    account:{
+    balance: res.data.fiat_bank_balance,
+    account: {
       number: res.data.bank_account_number,
       type: "Savings Account"
-    }, // Assuming balance is in cents
-  }
-  
-  // {  "bank_account_number": "45892000123456",  "fiat_bank_balance": 170000000 }
-  // Demo data
-  // return {
-  //   balance: 45230.00,
-  //   account: {
-  //     number: "XXXX XXXX XXXX 4738",
-  //     type: "Savings Account"
-  //   }
-  // };
+    }
+  };
 }
+
 
 export async function buyStablecoins({ address, tokenSymbol, tokenAmount, pin }) {
   const res = await apiClient.post(

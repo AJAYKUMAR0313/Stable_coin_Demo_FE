@@ -14,7 +14,7 @@ export const ENDPOINTS = {
   // ---------- Stablecoin Catalog ----------
   STABLECOINS: "/api/stablecoins",
 
-  USER_BALANCE: (customerId) => `/wallet/fiat_balance/${customerId}`,
+  USER_BALANCE: "/wallet/fiat_balance/",
 
   // ---------- On-Ramp (Payment-based) ----------
   // BUY_STABLECOINS: (address) =>`/wallet/free-tokens/${address}`,
