@@ -175,7 +175,7 @@ export const useTransferStore = create((set, get) => ({
   loadPayees: async (customerId) => {
     set({ payeesLoading: true });
     try {
-      const res = await fetch(`http://localhost:8000/bank_details/payees/${customerId}`);
+      const res = await fetch(`http://localhost:8000/bank_details/payees/${customerId}?tenant_id=${localStorage.getItem("tenantId")}`);
       console.log("Response:", res);
       const data = await res.json();
       console.log("Loaded payees:", data);
@@ -190,7 +190,7 @@ export const useTransferStore = create((set, get) => ({
  
   addPayee: async (customerId, payload) => {
     // console.log("customerId: ", customerId, payload);
-    await fetch(`http://localhost:8000/bank_details/payee/${customerId}`, {
+    await fetch(`http://localhost:8000/bank_details/payee/${customerId}?tenant_id=${localStorage.getItem("tenantId")}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -203,7 +203,7 @@ export const useTransferStore = create((set, get) => ({
     try {
       await axios.delete(`http://localhost:8000/bank_details/payee/payee_id`,{
         params: { customer_id: customerId,
-          payee_id: payeeId
+          payee_id: payeeId,tenant_id: localStorage.getItem("tenantId")
         },
       });
       // await get().loadPayees(customerId);
