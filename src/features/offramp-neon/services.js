@@ -36,12 +36,29 @@ export async function fetchAvailableTokens() {
  * Get conversion rates
  */
 export async function fetchConversionRates() {
-  return {
-    "USDC": { rateInr: 83.50 },
-    "USDT": { rateInr: 83.45 },
-    "DAI": { rateInr: 83.40 },
-    "ETH": { rateInr: 210000 }
+  const COIN_IDS = {
+    USDC: "usd-coin",
+    USDT: "tether",
+    DAI: "dai",
+    ETH: "ethereum",
   };
+
+  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${Object.values(
+    COIN_IDS
+  ).join(",")}&vs_currencies=inr`;
+
+  const response = await fetch(url);
+  const prices = await response.json();
+
+  const result = {};
+
+  for (const [symbol, id] of Object.entries(COIN_IDS)) {
+    result[symbol] = {
+      rateInr: prices[id]?.inr ?? 0,
+    };
+  }
+
+  return result;
 }
 
 /**
