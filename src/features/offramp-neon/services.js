@@ -102,48 +102,64 @@ export async function executeWithdrawalRequest({
   pin,
 }) {
   try {
-    const userAddress = localStorage.getItem("wallet_address");
+    // 1️⃣ Validate inputs early
+    if (!token || !amount) {
+      throw new Error("Token and amount are required");
+    }
 
+    const userAddress = localStorage.getItem("wallet_address");
     if (!userAddress) {
       throw new Error("Wallet address not found");
     }
 
-    const url =
-      import.meta.env.VITE_API_BASE_URL + "wallet/admin-wallet" ||
-      "http://localhost:8000/wallet/admin-wallet";
+    // 2️⃣ Proper base URL fallback
+    const baseUrl =
+      import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000/";
 
-    // 1️⃣ Fetch admin wallet directly
-    const walletRes = await apiClient.get(url, {
+    // Ensure trailing slash safety
+    const adminWalletUrl = `${baseUrl.replace(/\/$/, "")}/wallet/admin-wallet`;
+
+    // 3️⃣ Fetch admin wallet
+    console.log("Fetching admin wallet...");
+    const walletRes = await apiClient.get(adminWalletUrl, {
       params: { user_wallet_address: userAddress },
     });
 
-    console.log("Admin wallet response:", walletRes.data);
-    const mainWallet = walletRes.data.address;
+    const mainWallet = walletRes?.data?.address;
 
-    // 2️⃣ Transfer request
+    if (!mainWallet) {
+      throw new Error("Admin wallet address not found");
+    }
+
+    console.log("Admin wallet:", mainWallet);
+
+    // 4️⃣ Execute withdrawal transfer
+    console.log("Initiating withdrawal transfer...");
     const response = await apiClient.post("/wallet/transfer", {
       from_address: userAddress,
       to_address: mainWallet,
-      amount: amount,
+      amount: Number(amount),
       asset: token,
+      bank_account: bankAccount,
+      pin, // backend should validate this
     });
 
     return {
-      success: response.data.success,
-      transactionHash: response.data.tx_hash,
+      success: response?.data?.success ?? true,
+      transactionHash: response?.data?.tx_hash ?? null,
     };
-
   } catch (error) {
     console.error("Withdrawal request failed:", error);
 
-    const errorMessage =
-      error.response?.data?.detail?.[0]?.msg ||
-      error.response?.data?.detail ||
-      error.response?.data?.message ||
-      error.message ||
+    const message =
+      error?.response?.data?.detail?.[0]?.msg ??
+      error?.response?.data?.detail ??
+      error?.response?.data?.message ??
+      error?.message ??
       "Withdrawal failed";
 
-    throw new Error(errorMessage);
+    throw new Error(message);
   }
 }
+
 
