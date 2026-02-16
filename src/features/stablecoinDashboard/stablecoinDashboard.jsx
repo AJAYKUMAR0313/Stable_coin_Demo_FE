@@ -9,7 +9,11 @@ const StablecoinDashboard = () => {
 
   const [transactions, setTransactions] = useState([]);
   const [selectedTx, setSelectedTx] = useState(null);
-  const [loading, setLoading] = useState(true);
+
+  /* Loading states */
+  const [loadingTx, setLoadingTx] = useState(true);
+  const [loadingWallet, setLoadingWallet] = useState(true);
+  const isLoading = loadingTx || loadingWallet;
 
   /* Pagination */
   const [page, setPage] = useState(1);
@@ -20,9 +24,9 @@ const StablecoinDashboard = () => {
   const [totalStableValue, setTotalStableValue] = useState(0);
 
   const [stablecoins, setStablecoins] = useState([
-    { name: "USDC", balance: 0, change: "", icon: "🔵" },
-    { name: "USDT", balance: 0, change: "", icon: "🟢" },
-    { name: "JPM", balance: 0, change: "", icon: "🔷" },
+    { name: "USDC", balance: 0, icon: "🔵" },
+    { name: "USDT", balance: 0, icon: "🟢" },
+    { name: "JPM", balance: 0, icon: "🔷" },
   ]);
 
   /* Prevent scroll when modal open */
@@ -50,12 +54,12 @@ const StablecoinDashboard = () => {
   /* ================= TRANSACTIONS ================= */
   const fetchTransactions = async () => {
     try {
-      setLoading(true);
+      setLoadingTx(true);
 
       const wallet = localStorage.getItem("wallet_address");
       const offset = (page - 1) * limit;
-
-      const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
+      const apiUrl =
+        import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
 
       const response = await axios.get(
         `${apiUrl}transactions/transactions/${wallet}`,
@@ -66,28 +70,28 @@ const StablecoinDashboard = () => {
     } catch (error) {
       console.error("Transaction fetch error:", error);
     } finally {
-      setLoading(false);
+      setLoadingTx(false);
     }
   };
 
   /* ================= WALLET BALANCE ================= */
   const fetchWalletBalance = async () => {
     try {
+      setLoadingWallet(true);
+
       const wallet = localStorage.getItem("wallet_address");
-      const apiUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
-      const res = await axios.get(
-        `${apiUrl}wallet/balance`,
-        {
-          params: { wallet_address: wallet },
-        }
-      );
+      const apiUrl =
+        import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/";
+
+      const res = await axios.get(`${apiUrl}wallet/balance`, {
+        params: { wallet_address: wallet },
+      });
 
       const data = res.data;
 
       setFiatBalance(data.totalFiat || 0);
       setTotalStableValue(data.totalStablecoinValue || 0);
 
-      /* Map backend stablecoins to UI */
       setStablecoins((prev) =>
         prev.map((coin) => {
           const backendCoin = data.stablecoins?.find(
@@ -104,24 +108,37 @@ const StablecoinDashboard = () => {
       );
     } catch (err) {
       console.error("Wallet balance error:", err);
+    } finally {
+      setLoadingWallet(false);
     }
   };
 
-  /* Transactions pagination */
   useEffect(() => {
     fetchTransactions();
   }, [page]);
 
-  /* Wallet balance once */
   useEffect(() => {
     fetchWalletBalance();
   }, []);
 
   return (
     <div className="min-h-screen text-white bg-gradient-to-br from-[#071D3A] via-[#0B2A5B] to-[#0666E4] text-sm">
+
+      {/* ===== LOADING OVERLAY ===== */}
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#071D3A]/70 backdrop-blur-md">
+          <div className="w-14 h-14 border-4 border-white/30 border-t-white rounded-full animate-spin mb-4"></div>
+          <p className="text-white/80 text-sm font-medium">
+            Loading your wallet dashboard...
+          </p>
+        </div>
+      )}
+
       <div
         className={`max-w-[1400px] mx-auto px-5 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6 transition-all duration-300 ${
-          selectedTx ? "blur-sm pointer-events-none" : ""
+          selectedTx || isLoading
+            ? "blur-sm pointer-events-none opacity-70"
+            : ""
         }`}
       >
         {/* MAIN */}
@@ -209,11 +226,7 @@ const StablecoinDashboard = () => {
               Recent Transactions
             </h2>
 
-            {loading ? (
-              <p className="text-white/70 text-xs">
-                Loading transactions...
-              </p>
-            ) : transactions?.length === 0 ? (
+            {transactions?.length === 0 ? (
               <p className="text-white/70 text-xs">
                 No transactions found
               </p>
