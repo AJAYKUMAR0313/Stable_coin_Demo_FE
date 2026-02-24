@@ -21,6 +21,16 @@ export default function TransactionDetailsModal({ tx, onClose }) {
     RECEIVED: "text-green-400",
   };
 
+  const tenantId = localStorage.getItem("tenantId");
+
+  let baseUrl = "https://etherscan.io";
+
+  if (tenantId === "2") {
+    baseUrl = "https://sepolia.etherscan.io";
+  } else if (tenantId === "3") {
+    baseUrl = "https://amoy.polygonscan.com";
+  }
+
   const statusColor = {
     SUCCESS: "bg-green-500/20 text-green-300",
     FAILED: "bg-red-500/20 text-red-300",
@@ -90,30 +100,19 @@ export default function TransactionDetailsModal({ tx, onClose }) {
 
           <Detail label="Timestamp" value={tx.timestamp} />
 
-          <Detail
-            label="Transaction Hash"
-            value={tx.tx_hash}
-            copy
-          />
+          <Detail label="Transaction Hash" value={tx.tx_hash} copy />
         </div>
 
         {/* Footer */}
         <div className="flex justify-between items-center mt-10">
-        {(localStorage.getItem("tenantId") === "2") ?(<a
-            href={`https://sepolia.etherscan.io/tx/${tx.tx_hash}`}
+          <a
+            href={`${baseUrl}/tx/${tx.tx_hash}`}
             target="_blank"
             rel="noreferrer"
             className="text-cyan-300 text-sm hover:underline"
           >
             View on Explorer →
-          </a>):(<a
-            href={`https://etherscan.io/tx/${tx.tx_hash}`}
-            target="_blank"
-            rel="noreferrer"
-            className="text-cyan-300 text-sm hover:underline"
-          >
-            View on Explorer →
-          </a>)}
+          </a>
           {/* <a
             href={`https://etherscan.io/tx/${tx.tx_hash}`}
             target="_blank"
