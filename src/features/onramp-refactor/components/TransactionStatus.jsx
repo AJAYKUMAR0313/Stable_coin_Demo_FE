@@ -4,7 +4,6 @@ import { useOnRampStore } from "../onrampStore";
 export default function TransactionStatus() {
   const { transactionHash } = useOnRampStore();
   const [copied, setCopied] = useState(false);
-
   const tenantId = localStorage.getItem("tenantId");
 
   let baseUrl = "https://etherscan.io";
@@ -43,7 +42,7 @@ export default function TransactionStatus() {
       </div>
 
       <a
-        href={`${baseUrl}/tx/${tx.tx_hash}`}
+        href={`${baseUrl}/tx/${transactionHash}`}
         target="_blank"
         rel="noreferrer"
         className="text-cyan-300 text-sm hover:underline"
